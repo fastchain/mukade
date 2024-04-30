@@ -1,0 +1,105 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: 'Certificate Authority API'
+  description: 'API for managing digital certificates issued by a Certificate Authority (CA).'
+host: 'ca.example.com'
+schemes:
+  - 'http'
+basePath: '/api/v1'
+produces:
+  - 'application/json'
+
+paths:
+  /certificates:
+    post:
+      summary: 'Issue a new certificate'
+      description: 'Request the issuance of a new digital certificate.'
+      operationId: 'issueCertificate'
+      parameters:
+        - name: 'certificateRequest'
+          in: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/CertificateRequest'
+      responses:
+        200:
+          description: 'Certificate issued successfully'
+          schema:
+            $ref: '#/definitions/Certificate'
+        400:
+          description: 'Invalid request'
+        500:
+          description: 'Internal server error'
+
+  /certificates/{certificateId}:
+    get:
+      summary: 'Get certificate status'
+      description: 'Retrieve the status and details of a specific certificate.'
+      operationId: 'getCertificate'
+      parameters:
+        - name: 'certificateId'
+          in: 'path'
+          required: true
+          type: 'string'
+      responses:
+        200:
+          description: 'Successful retrieval of certificate data'
+          schema:
+            $ref: '#/definitions/Certificate'
+        404:
+          description: 'Certificate not found'
+        500:
+          description: 'Internal server error'
+
+    delete:
+      summary: 'Revoke a certificate'
+      description: 'Revoke a specific certificate.'
+      operationId: 'revokeCertificate'
+      parameters:
+        - name: 'certificateId'
+          in: 'path'
+          required: true
+          type: 'string'
+      responses:
+        200:
+          description: 'Certificate revoked successfully'
+        404:
+          description: 'Certificate not found'
+        500:
+          description: 'Internal server error'
+
+definitions:
+  CertificateRequest:
+    type: 'object'
+    required:
+      - 'subject'
+      - 'publicKey'
+    properties:
+      subject:
+        type: 'string'
+        description: 'Name of the entity requesting the certificate.'
+      publicKey:
+        type: 'string'
+        description: 'Public key to be associated with the certificate.'
+
+  Certificate:
+    type: 'object'
+    properties:
+      certificateId:
+        type: 'string'
+        description: 'Unique identifier for the certificate.'
+      subject:
+        type: 'string'
+        description: 'Name of the entity the certificate is issued to.'
+      issuedOn:
+        type: 'string'
+        format: 'date-time'
+        description: 'Date and time the certificate was issued.'
+      expiresOn:
+        type: 'string'
+        format: 'date-time'
+        description: 'Expiration date of the certificate.'
+      status:
+        type: 'string'
+        description: 'Current status of the certificate (e.g., active, revoked).'
