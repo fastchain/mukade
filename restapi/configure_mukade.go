@@ -10,11 +10,11 @@ import (
 	"github.com/go-openapi/runtime"
 	"log"
 	"net/http"
-
-	"github.com/cloudflare/cfssl/api/client"
 )
 
 //go:generate swagger generate server --target ../../mukade --name Mukade --spec ../swagger.yml --principal interface{}
+
+var MukadeFlags mukadeoperations.MukadeFlags
 
 func configureFlags(api *operations.MukadeAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
@@ -73,11 +73,11 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 	//dbmodels.ConnectDataBase()
 
 	//CFSS client
-	cfss := client.NewServer("http://127.0.0.1:8888")
-	if cfss == nil {
-		panic(cfss)
-
-	}
+	//cfss := client.NewServer("http://127.0.0.1:8888")
+	//if cfss == nil {
+	//	panic(cfss)
+	//
+	//}
 
 	api.UseSwaggerUI()
 	// To continue using redoc as your UI, uncomment the following line
@@ -108,7 +108,7 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 	//	})
 	//}
 
-	api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(mukadeoperations.LineCheckinLogic(LinesFlags))
+	api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(mukadeoperations.IssueCertificateLogic(MukadeFlags))
 
 	api.PreServerShutdown = func() {}
 
