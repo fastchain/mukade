@@ -14,7 +14,8 @@ import (
 )
 
 // NewRevokeCertificateParams creates a new RevokeCertificateParams object
-// no default values defined in spec.
+//
+// There are no default values defined in the spec.
 func NewRevokeCertificateParams() RevokeCertificateParams {
 
 	return RevokeCertificateParams{}
@@ -49,7 +50,6 @@ func (o *RevokeCertificateParams) BindRequest(r *http.Request, route *middleware
 	if err := o.bindCertificateID(rCertificateID, rhkCertificateID, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -65,7 +65,6 @@ func (o *RevokeCertificateParams) bindCertificateID(rawData []string, hasKey boo
 
 	// Required: true
 	// Parameter is provided by construction from the route
-
 	o.CertificateID = raw
 
 	return nil

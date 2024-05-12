@@ -16,7 +16,8 @@ import (
 // IssueCertificateOKCode is the HTTP code returned for type IssueCertificateOK
 const IssueCertificateOKCode int = 200
 
-/*IssueCertificateOK Certificate issued successfully
+/*
+IssueCertificateOK Certificate issued successfully
 
 swagger:response issueCertificateOK
 */
@@ -60,7 +61,8 @@ func (o *IssueCertificateOK) WriteResponse(rw http.ResponseWriter, producer runt
 // IssueCertificateBadRequestCode is the HTTP code returned for type IssueCertificateBadRequest
 const IssueCertificateBadRequestCode int = 400
 
-/*IssueCertificateBadRequest Invalid request
+/*
+IssueCertificateBadRequest Invalid request
 
 swagger:response issueCertificateBadRequest
 */
@@ -84,7 +86,8 @@ func (o *IssueCertificateBadRequest) WriteResponse(rw http.ResponseWriter, produ
 // IssueCertificateInternalServerErrorCode is the HTTP code returned for type IssueCertificateInternalServerError
 const IssueCertificateInternalServerErrorCode int = 500
 
-/*IssueCertificateInternalServerError Internal server error
+/*
+IssueCertificateInternalServerError Internal server error
 
 swagger:response issueCertificateInternalServerError
 */

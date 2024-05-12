@@ -3,6 +3,7 @@ module github.com/fastchain/mukade
 go 1.22.2
 
 require (
+	github.com/cloudflare/cfssl v1.6.5
 	github.com/go-openapi/errors v0.22.0
 	github.com/go-openapi/loads v0.22.0
 	github.com/go-openapi/runtime v0.28.0

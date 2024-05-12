@@ -16,7 +16,8 @@ import (
 // GetCertificateOKCode is the HTTP code returned for type GetCertificateOK
 const GetCertificateOKCode int = 200
 
-/*GetCertificateOK Successful retrieval of certificate data
+/*
+GetCertificateOK Successful retrieval of certificate data
 
 swagger:response getCertificateOK
 */
@@ -60,7 +61,8 @@ func (o *GetCertificateOK) WriteResponse(rw http.ResponseWriter, producer runtim
 // GetCertificateNotFoundCode is the HTTP code returned for type GetCertificateNotFound
 const GetCertificateNotFoundCode int = 404
 
-/*GetCertificateNotFound Certificate not found
+/*
+GetCertificateNotFound Certificate not found
 
 swagger:response getCertificateNotFound
 */
@@ -84,7 +86,8 @@ func (o *GetCertificateNotFound) WriteResponse(rw http.ResponseWriter, producer 
 // GetCertificateInternalServerErrorCode is the HTTP code returned for type GetCertificateInternalServerError
 const GetCertificateInternalServerErrorCode int = 500
 
-/*GetCertificateInternalServerError Internal server error
+/*
+GetCertificateInternalServerError Internal server error
 
 swagger:response getCertificateInternalServerError
 */

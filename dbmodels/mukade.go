@@ -7,80 +7,72 @@ import (
 	"reflect"
 )
 
-
 type Certificate = models.Certificate
 type CertificateRequest = models.CertificateRequest
+
 //type Bookings = models.Position
 //type User = models.User
 //type Error = models.Error
 
-
 /*
-type Line struct {
-	models.Line
-  ID     uint   `json:"id" gorm:"primary_key"`
-  Owner  string `json:"title"`
-  CheckinCode string `json:"title"`
-  //Author string `json:"author"`
+	type Line struct {
+		models.Line
+	  ID     uint   `json:"id" gorm:"primary_key"`
+	  Owner  string `json:"title"`
+	  CheckinCode string `json:"title"`
+	  //Author string `json:"author"`
 
 }
 
-
-
-
-
-
-type Resident struct {
-	ID     uint   `json:"id" gorm:"primary_key"`
-	PushToken  uint `json:"pushtoken"`
-	Email string `json:"email"`
-	//LineId  uint `json:"title"`
-	//Author string `json:"author"`
-}
-
-
-type Bookings struct {
-	//ID     uint   `json:"id" gorm:"primary_key"`
-	//LineID  uint `json:"title" gorm:"primary_key"`
-	ResidentID  uint `json:"residentid" gorm:"primary_key"`
-	CheckinTime uint `json:"checkinTime"`
-	CheckoutTime uint `json:"checkoutTime"`
-	Status string `json:"status"`
-	//Author string `json:"author"`
-	table string `gorm:"-"`
-}
-
-func (p Bookings) TableName() string {
-	// double check here, make sure the table does exist!!
-	if p.table != "" {
-		return p.table
+	type Resident struct {
+		ID     uint   `json:"id" gorm:"primary_key"`
+		PushToken  uint `json:"pushtoken"`
+		Email string `json:"email"`
+		//LineId  uint `json:"title"`
+		//Author string `json:"author"`
 	}
-	return "bookings_temp" // default table name
+
+	type Bookings struct {
+		//ID     uint   `json:"id" gorm:"primary_key"`
+		//LineID  uint `json:"title" gorm:"primary_key"`
+		ResidentID  uint `json:"residentid" gorm:"primary_key"`
+		CheckinTime uint `json:"checkinTime"`
+		CheckoutTime uint `json:"checkoutTime"`
+		Status string `json:"status"`
+		//Author string `json:"author"`
+		table string `gorm:"-"`
+	}
+
+	func (p Bookings) TableName() string {
+		// double check here, make sure the table does exist!!
+		if p.table != "" {
+			return p.table
+		}
+		return "bookings_temp" // default table name
+	}
+
+	func CreateBookingTables(name string)  {
+		// double check here, make sure the table does exist!!
+		DB.Migrator().CreateTable(&Resident{})
+		/*
+		if result.Error != nil {
+			//serveroperations.
+			panic(result.Error)
+		}
+
+
+		DB.Migrator().RenameTable(&Resident{}, "line_"+name)
+
+		if result.Error != nil {
+			//serveroperations.
+			panic(result.Error)
+		}
+
 }
 */
-func CreateBookingTables(name string)  {
-	// double check here, make sure the table does exist!!
-	DB.Migrator().CreateTable(&Resident{})
-	/*
-	if result.Error != nil {
-		//serveroperations.
-		panic(result.Error)
-	}
-
-	 */
-	DB.Migrator().RenameTable(&Resident{}, "line_"+name)
-	/*
-	if result.Error != nil {
-		//serveroperations.
-		panic(result.Error)
-	}
-
-	 */
-}
-
 func setStructTag(f *reflect.StructField) {
-    f.Tag = f.Tag + " gorm:\"primary_key;AUTO_INCREMENT\"" // "`json:name-field`"
-    //fmt.Println(f.Tag)
+	f.Tag = f.Tag + " gorm:\"primary_key;AUTO_INCREMENT\"" // "`json:name-field`"
+	//fmt.Println(f.Tag)
 }
 
 var DB *gorm.DB
@@ -109,14 +101,11 @@ func ConnectDataBase() {
 
 	//users := User{}
 
-
-
-
 	// Creating the table if it doesn't exist
 	//db.AutoMigrate(&Bookings{})
 	db.AutoMigrate(&residents)
 	db.AutoMigrate(&lines)
-	db.AutoMigrate(&users)
+	//db.AutoMigrate(&users)
 
 	DB = db
 

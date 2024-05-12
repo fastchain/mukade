@@ -30,7 +30,6 @@ func init() {
     "title": "Certificate Authority API",
     "version": "1.0.0"
   },
-  "host": "ca.example.com",
   "basePath": "/api/v1",
   "paths": {
     "/certificates": {
@@ -178,7 +177,6 @@ func init() {
     "title": "Certificate Authority API",
     "version": "1.0.0"
   },
-  "host": "ca.example.com",
   "basePath": "/api/v1",
   "paths": {
     "/certificates": {

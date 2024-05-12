@@ -4,14 +4,14 @@ package restapi
 
 import (
 	"crypto/tls"
-	"github.com/fastchain/mukade/dbmodels"
+	"github.com/fastchain/mukade/restapi/operations"
+	"github.com/fastchain/mukadeoperations"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/runtime/middleware"
 	"log"
 	"net/http"
 
-	"github.com/fastchain/mukade/restapi/operations"
+	"github.com/cloudflare/cfssl/api/client"
 )
 
 //go:generate swagger generate server --target ../../mukade --name Mukade --spec ../swagger.yml --principal interface{}
@@ -20,14 +20,14 @@ func configureFlags(api *operations.MukadeAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-
-//decorator for a basic accesslogs
+// decorator for a basic accesslogs
 func addLogging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Println(r.Method, r.URL, r.Header.Get("User-Agent"))
 		next.ServeHTTP(w, r)
 	})
 }
+
 //
 ////Get embeded static or FS
 //func getFileSystem(useOS bool) http.FileSystem {
@@ -59,8 +59,6 @@ func addLogging(next http.Handler) http.Handler {
 //	})
 //}
 
-
-
 func configureAPI(api *operations.MukadeAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
@@ -72,8 +70,14 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 	// api.Logger = log.Printf
 
 	//configuring DB
-	dbmodels.ConnectDataBase()
+	//dbmodels.ConnectDataBase()
 
+	//CFSS client
+	cfss := client.NewServer("http://127.0.0.1:8888")
+	if cfss == nil {
+		panic(cfss)
+
+	}
 
 	api.UseSwaggerUI()
 	// To continue using redoc as your UI, uncomment the following line
@@ -83,21 +87,28 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	if api.GetCertificateHandler == nil {
-		api.GetCertificateHandler = operations.GetCertificateHandlerFunc(func(params operations.GetCertificateParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.GetCertificate has not yet been implemented")
-		})
-	}
-	if api.IssueCertificateHandler == nil {
-		api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(func(params operations.IssueCertificateParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.IssueCertificate has not yet been implemented")
-		})
-	}
-	if api.RevokeCertificateHandler == nil {
-		api.RevokeCertificateHandler = operations.RevokeCertificateHandlerFunc(func(params operations.RevokeCertificateParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.RevokeCertificate has not yet been implemented")
-		})
-	}
+	//if api.GetCertificateHandler == nil {
+	//	api.GetCertificateHandler = operations.GetCertificateHandlerFunc(func(params operations.GetCertificateParams) middleware.Responder {
+	//
+	//		return middleware.NotImplemented("operation operations.GetCertificateParams has not yet been implemented")
+	//	})
+	//}
+	//if api.IssueCertificateHandler == nil {
+	//	api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(func(params operations.IssueCertificateParams) middleware.Responder {
+	//		sign, err := cfss.Sign([]byte{5, 5, 5, 5})
+	//		if sign != nil || err == nil {
+	//			panic("expected error with sign function")
+	//		}
+	//		return middleware.NotImplemented(string(sign))
+	//	})
+	//}
+	//if api.RevokeCertificateHandler == nil {
+	//	api.RevokeCertificateHandler = operations.RevokeCertificateHandlerFunc(func(params operations.RevokeCertificateParams) middleware.Responder {
+	//		return middleware.NotImplemented("operation operations.RevokeCertificate has not yet been implemented")
+	//	})
+	//}
+
+	api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(mukadeoperations.LineCheckinLogic(LinesFlags))
 
 	api.PreServerShutdown = func() {}
 
