@@ -14,8 +14,7 @@ import (
 )
 
 // NewGetCertificateParams creates a new GetCertificateParams object
-//
-// There are no default values defined in the spec.
+// no default values defined in spec.
 func NewGetCertificateParams() GetCertificateParams {
 
 	return GetCertificateParams{}
@@ -50,6 +49,7 @@ func (o *GetCertificateParams) BindRequest(r *http.Request, route *middleware.Ma
 	if err := o.bindCertificateID(rCertificateID, rhkCertificateID, route.Formats); err != nil {
 		res = append(res, err)
 	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -65,6 +65,7 @@ func (o *GetCertificateParams) bindCertificateID(rawData []string, hasKey bool, 
 
 	// Required: true
 	// Parameter is provided by construction from the route
+
 	o.CertificateID = raw
 
 	return nil

@@ -14,8 +14,7 @@ import (
 // RevokeCertificateOKCode is the HTTP code returned for type RevokeCertificateOK
 const RevokeCertificateOKCode int = 200
 
-/*
-RevokeCertificateOK Certificate revoked successfully
+/*RevokeCertificateOK Certificate revoked successfully
 
 swagger:response revokeCertificateOK
 */
@@ -39,8 +38,7 @@ func (o *RevokeCertificateOK) WriteResponse(rw http.ResponseWriter, producer run
 // RevokeCertificateNotFoundCode is the HTTP code returned for type RevokeCertificateNotFound
 const RevokeCertificateNotFoundCode int = 404
 
-/*
-RevokeCertificateNotFound Certificate not found
+/*RevokeCertificateNotFound Certificate not found
 
 swagger:response revokeCertificateNotFound
 */
@@ -64,8 +62,7 @@ func (o *RevokeCertificateNotFound) WriteResponse(rw http.ResponseWriter, produc
 // RevokeCertificateInternalServerErrorCode is the HTTP code returned for type RevokeCertificateInternalServerError
 const RevokeCertificateInternalServerErrorCode int = 500
 
-/*
-RevokeCertificateInternalServerError Internal server error
+/*RevokeCertificateInternalServerError Internal server error
 
 swagger:response revokeCertificateInternalServerError
 */

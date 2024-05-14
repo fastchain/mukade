@@ -13,18 +13,18 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewRevokeCertificateParams creates a new RevokeCertificateParams object
+// NewSignRequestParams creates a new SignRequestParams object
 // no default values defined in spec.
-func NewRevokeCertificateParams() RevokeCertificateParams {
+func NewSignRequestParams() SignRequestParams {
 
-	return RevokeCertificateParams{}
+	return SignRequestParams{}
 }
 
-// RevokeCertificateParams contains all the bound params for the revoke certificate operation
+// SignRequestParams contains all the bound params for the sign request operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters revokeCertificate
-type RevokeCertificateParams struct {
+// swagger:parameters signRequest
+type SignRequestParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -33,20 +33,20 @@ type RevokeCertificateParams struct {
 	  Required: true
 	  In: path
 	*/
-	CertificateID string
+	RequestID string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewRevokeCertificateParams() beforehand.
-func (o *RevokeCertificateParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewSignRequestParams() beforehand.
+func (o *SignRequestParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
 
-	rCertificateID, rhkCertificateID, _ := route.Params.GetOK("certificateId")
-	if err := o.bindCertificateID(rCertificateID, rhkCertificateID, route.Formats); err != nil {
+	rRequestID, rhkRequestID, _ := route.Params.GetOK("requestId")
+	if err := o.bindRequestID(rRequestID, rhkRequestID, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -56,8 +56,8 @@ func (o *RevokeCertificateParams) BindRequest(r *http.Request, route *middleware
 	return nil
 }
 
-// bindCertificateID binds and validates parameter CertificateID from path.
-func (o *RevokeCertificateParams) bindCertificateID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+// bindRequestID binds and validates parameter RequestID from path.
+func (o *SignRequestParams) bindRequestID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -66,7 +66,7 @@ func (o *RevokeCertificateParams) bindCertificateID(rawData []string, hasKey boo
 	// Required: true
 	// Parameter is provided by construction from the route
 
-	o.CertificateID = raw
+	o.RequestID = raw
 
 	return nil
 }

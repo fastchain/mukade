@@ -29,12 +29,12 @@ func NewRequestCertificate(ctx *middleware.Context, handler RequestCertificateHa
 	return &RequestCertificate{Context: ctx, Handler: handler}
 }
 
-/*
-	RequestCertificate swagger:route POST /requests requestCertificate
+/*RequestCertificate swagger:route POST /requests requestCertificate
 
-# Request a new certificate
+Request a new certificate
 
 Request the issuance of a new digital certificate.
+
 */
 type RequestCertificate struct {
 	Context *middleware.Context
@@ -44,7 +44,7 @@ type RequestCertificate struct {
 func (o *RequestCertificate) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		*r = *rCtx
+		r = rCtx
 	}
 	var Params = NewRequestCertificateParams()
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params

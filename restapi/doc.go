@@ -2,18 +2,18 @@
 
 // Package restapi Certificate Authority API
 //
-//	API for managing digital certificates issued by a Certificate Authority (CA).
-//	Schemes:
-//	  http
-//	Host: localhost
-//	BasePath: /api/v1
-//	Version: 1.0.0
+//  API for managing digital certificates issued by a Certificate Authority (CA).
+//  Schemes:
+//    http
+//  Host: localhost
+//  BasePath: /api/v1
+//  Version: 1.0.0
 //
-//	Consumes:
-//	  - application/json
+//  Consumes:
+//    - application/json
 //
-//	Produces:
-//	  - application/json
+//  Produces:
+//    - application/json
 //
 // swagger:meta
 package restapi

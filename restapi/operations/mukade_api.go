@@ -54,6 +54,9 @@ func NewMukadeAPI(spec *loads.Document) *MukadeAPI {
 		RevokeCertificateHandler: RevokeCertificateHandlerFunc(func(params RevokeCertificateParams) middleware.Responder {
 			return middleware.NotImplemented("operation RevokeCertificate has not yet been implemented")
 		}),
+		SignRequestHandler: SignRequestHandlerFunc(func(params SignRequestParams) middleware.Responder {
+			return middleware.NotImplemented("operation SignRequest has not yet been implemented")
+		}),
 	}
 }
 
@@ -73,11 +76,9 @@ type MukadeAPI struct {
 	// BasicAuthenticator generates a runtime.Authenticator from the supplied basic auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	BasicAuthenticator func(security.UserPassAuthentication) runtime.Authenticator
-
 	// APIKeyAuthenticator generates a runtime.Authenticator from the supplied token auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	APIKeyAuthenticator func(string, string, security.TokenAuthentication) runtime.Authenticator
-
 	// BearerAuthenticator generates a runtime.Authenticator from the supplied bearer token auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	BearerAuthenticator func(string, security.ScopedTokenAuthentication) runtime.Authenticator
@@ -98,7 +99,8 @@ type MukadeAPI struct {
 	RequestCertificateHandler RequestCertificateHandler
 	// RevokeCertificateHandler sets the operation handler for the revoke certificate operation
 	RevokeCertificateHandler RevokeCertificateHandler
-
+	// SignRequestHandler sets the operation handler for the sign request operation
+	SignRequestHandler SignRequestHandler
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
@@ -186,6 +188,9 @@ func (o *MukadeAPI) Validate() error {
 	}
 	if o.RevokeCertificateHandler == nil {
 		unregistered = append(unregistered, "RevokeCertificateHandler")
+	}
+	if o.SignRequestHandler == nil {
+		unregistered = append(unregistered, "SignRequestHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -291,6 +296,10 @@ func (o *MukadeAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/certificates/{certificateId}"] = NewRevokeCertificate(o.context, o.RevokeCertificateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/requests/{requestId}"] = NewSignRequest(o.context, o.SignRequestHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
@@ -332,6 +341,6 @@ func (o *MukadeAPI) AddMiddlewareFor(method, path string, builder middleware.Bui
 	}
 	o.Init()
 	if h, ok := o.handlers[um][path]; ok {
-		o.handlers[um][path] = builder(h)
+		o.handlers[method][path] = builder(h)
 	}
 }

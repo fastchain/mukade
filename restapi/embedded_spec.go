@@ -146,6 +146,32 @@ func init() {
           }
         }
       }
+    },
+    "/requests/{requestId}": {
+      "get": {
+        "description": "Request the issuance of a new digital certificate.",
+        "summary": "Issue certificate on request",
+        "operationId": "signRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "requestId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request processed"
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -327,6 +353,32 @@ func init() {
             "schema": {
               "$ref": "#/definitions/CertificateRequest"
             }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/requests/{requestId}": {
+      "get": {
+        "description": "Request the issuance of a new digital certificate.",
+        "summary": "Issue certificate on request",
+        "operationId": "signRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "requestId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request processed"
           },
           "400": {
             "description": "Invalid request"

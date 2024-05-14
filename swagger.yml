@@ -31,7 +31,25 @@ paths:
           description: 'Invalid request'
         500:
           description: 'Internal server error'
-
+  /requests/{requestId}:
+    get:
+      summary: 'Issue certificate on request'
+      description: 'Request the issuance of a new digital certificate.'
+      operationId: 'signRequest'
+      parameters:
+        - name: 'requestId'
+          in: 'path'
+          required: true
+          type: 'string'
+      responses:
+        200:
+          description: 'Request processed'
+#          schema:
+#            $ref: '#/definitions/CertificateRequest'
+        400:
+          description: 'Invalid request'
+        500:
+          description: 'Internal server error'
   /certificates:
     post:
       summary: 'Issue a new certificate'

@@ -112,6 +112,7 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 	//api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(mukadeoperations.IssueCertificateLogic(MukadeFlags))
 
 	api.RequestCertificateHandler = operations.RequestCertificateHandlerFunc(mukadeoperations.RequestCertificateLogic(MukadeFlags))
+	api.SignRequestHandler = operations.SignRequestHandlerFunc(mukadeoperations.SignRequestLogic(MukadeFlags))
 
 	api.PreServerShutdown = func() {}
 
