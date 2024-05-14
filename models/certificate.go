@@ -30,6 +30,12 @@ type Certificate struct {
 	// Format: date-time
 	IssuedOn strfmt.DateTime `json:"issuedOn,omitempty"`
 
+	// PEM encoding
+	Pem string `json:"pem,omitempty"`
+
+	// Certificate Request
+	Req string `json:"req,omitempty"`
+
 	// Current status of the certificate (e.g., active, revoked).
 	Status string `json:"status,omitempty"`
 

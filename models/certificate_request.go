@@ -23,6 +23,9 @@ type CertificateRequest struct {
 	// Required: true
 	PublicKey *string `json:"publicKey"`
 
+	// Raw request as string
+	Raw string `json:"raw,omitempty"`
+
 	// Name of the entity requesting the certificate.
 	// Required: true
 	Subject *string `json:"subject"`

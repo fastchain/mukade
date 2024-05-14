@@ -85,26 +85,28 @@ func ConnectDataBase() {
 		panic("Failed to connect to database!")
 	}
 
-	residents := Certificate{}
-	field, ok := reflect.TypeOf(&residents).Elem().FieldByName("Residentid")
-	if !ok {
-		panic("Field not found")
-	}
-	setStructTag(&field)
-
-	lines := CertificateRequest{}
-	field, ok = reflect.TypeOf(&lines).Elem().FieldByName("Lineid")
-	if !ok {
-		panic("Field not found")
-	}
-	setStructTag(&field)
+	certificate := Certificate{}
+	request := CertificateRequest{}
+	//
+	//field, ok := reflect.TypeOf(&certificates).Elem().FieldByName("Residentid")
+	//if !ok {
+	//	panic("Field not found")
+	//}
+	//setStructTag(&field)
+	//
+	//
+	//field, ok = reflect.TypeOf(&request).Elem().FieldByName("Lineid")
+	//if !ok {
+	//	panic("Field not found")
+	//}
+	//setStructTag(&field)
 
 	//users := User{}
 
 	// Creating the table if it doesn't exist
 	//db.AutoMigrate(&Bookings{})
-	db.AutoMigrate(&residents)
-	db.AutoMigrate(&lines)
+	db.AutoMigrate(&certificate)
+	db.AutoMigrate(&request)
 	//db.AutoMigrate(&users)
 
 	DB = db

@@ -11,6 +11,27 @@ produces:
   - 'application/json'
 
 paths:
+  /requests:
+    post:
+      summary: 'Request a new certificate'
+      description: 'Request the issuance of a new digital certificate.'
+      operationId: 'requestCertificate'
+      parameters:
+        - name: 'certificateRequest'
+          in: 'body'
+          required: true
+          schema:
+            $ref: '#/definitions/CertificateRequest'
+      responses:
+        200:
+          description: 'Certificate requested successfully'
+          schema:
+            $ref: '#/definitions/CertificateRequest'
+        400:
+          description: 'Invalid request'
+        500:
+          description: 'Internal server error'
+
   /certificates:
     post:
       summary: 'Issue a new certificate'
@@ -82,6 +103,9 @@ definitions:
       publicKey:
         type: 'string'
         description: 'Public key to be associated with the certificate.'
+      raw:
+        type: 'string'
+        description: 'Raw request as string'
 
   Certificate:
     type: 'object'
@@ -103,3 +127,9 @@ definitions:
       status:
         type: 'string'
         description: 'Current status of the certificate (e.g., active, revoked).'
+      pem:
+        type: 'string'
+        description: 'PEM encoding'
+      req:
+        type: 'string'
+        description: 'Certificate Request'

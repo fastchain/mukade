@@ -1,4 +1,4 @@
-package mukadetoperations
+package mukadeoperations
 
 type MukadeFlags struct {
 }

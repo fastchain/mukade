@@ -14,13 +14,14 @@ import (
 /*
 GetArchiveLogic is logic to process GET request to dowload archive
 */
-func IssueCertificateLogic(Flags MukadeFlags) func(params serveroperations.IssueCertificateParams) middleware.Responder {
+func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.RequestCertificateParams) middleware.Responder {
 
-	return func(params serveroperations.IssueCertificateParams) middleware.Responder {
+	return func(params serveroperations.RequestCertificateParams) middleware.Responder {
 
 		newCSR, err := helpers.ParseCSRPEM([]byte(params.CertificateRequest.Raw))
-		fmt.Println(params.CertificateRequest.Raw)
+		fmt.Println(newCSR.Subject)
 		if err != nil {
+			//return serveroperations.NewRequestCertificateOK().WithPayload(err)
 			panic(err)
 		}
 
@@ -31,10 +32,13 @@ func IssueCertificateLogic(Flags MukadeFlags) func(params serveroperations.Issue
 		//CertificateRequest
 
 		kk := fmt.Sprint(newCSR.PublicKey)
+		cb := fmt.Sprint(newCSR.Subject)
 
-		newRequest := dbmodels.CertificateRequest{Subject: &newCSR.Subject.Organization[0],
+		newRequest := dbmodels.CertificateRequest{
+
 			PublicKey: &kk,
 			Raw:       params.CertificateRequest.Raw,
+			Subject:   &cb,
 		}
 		result := dbmodels.DB.Create(&newRequest)
 		if result.Error != nil {
@@ -64,7 +68,7 @@ func IssueCertificateLogic(Flags MukadeFlags) func(params serveroperations.Issue
 		//var crt dbmodels.CertificateRequest
 		//crt.Pem = string(helpers.EncodeCertificatePEM(newCert))
 		////CFSS client
-		return serveroperations.NewIssueCertificateOK()
+		return serveroperations.NewRequestCertificateOK().WithPayload(&newRequest)
 		//return serveroperations.NewLineCheckInOK().WithPayload(&resident)
 		////.WithPayload(archiveBodyReader)
 	}
