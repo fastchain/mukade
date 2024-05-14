@@ -115,6 +115,37 @@ func init() {
           }
         }
       }
+    },
+    "/requests": {
+      "post": {
+        "description": "Request the issuance of a new digital certificate.",
+        "summary": "Request a new certificate",
+        "operationId": "requestCertificate",
+        "parameters": [
+          {
+            "name": "certificateRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CertificateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Certificate requested successfully",
+            "schema": {
+              "$ref": "#/definitions/CertificateRequest"
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -135,6 +166,14 @@ func init() {
           "type": "string",
           "format": "date-time"
         },
+        "pem": {
+          "description": "PEM encoding",
+          "type": "string"
+        },
+        "req": {
+          "description": "Certificate Request",
+          "type": "string"
+        },
         "status": {
           "description": "Current status of the certificate (e.g., active, revoked).",
           "type": "string"
@@ -154,6 +193,10 @@ func init() {
       "properties": {
         "publicKey": {
           "description": "Public key to be associated with the certificate.",
+          "type": "string"
+        },
+        "raw": {
+          "description": "Raw request as string",
           "type": "string"
         },
         "subject": {
@@ -262,6 +305,37 @@ func init() {
           }
         }
       }
+    },
+    "/requests": {
+      "post": {
+        "description": "Request the issuance of a new digital certificate.",
+        "summary": "Request a new certificate",
+        "operationId": "requestCertificate",
+        "parameters": [
+          {
+            "name": "certificateRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CertificateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Certificate requested successfully",
+            "schema": {
+              "$ref": "#/definitions/CertificateRequest"
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -282,6 +356,14 @@ func init() {
           "type": "string",
           "format": "date-time"
         },
+        "pem": {
+          "description": "PEM encoding",
+          "type": "string"
+        },
+        "req": {
+          "description": "Certificate Request",
+          "type": "string"
+        },
         "status": {
           "description": "Current status of the certificate (e.g., active, revoked).",
           "type": "string"
@@ -301,6 +383,10 @@ func init() {
       "properties": {
         "publicKey": {
           "description": "Public key to be associated with the certificate.",
+          "type": "string"
+        },
+        "raw": {
+          "description": "Raw request as string",
           "type": "string"
         },
         "subject": {

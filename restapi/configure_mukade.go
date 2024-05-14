@@ -4,8 +4,9 @@ package restapi
 
 import (
 	"crypto/tls"
+	"github.com/fastchain/mukade/dbmodels"
+	"github.com/fastchain/mukade/mukadeoperations"
 	"github.com/fastchain/mukade/restapi/operations"
-	"github.com/fastchain/mukadeoperations"
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"log"
@@ -70,7 +71,7 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 	// api.Logger = log.Printf
 
 	//configuring DB
-	//dbmodels.ConnectDataBase()
+	dbmodels.ConnectDataBase()
 
 	//CFSS client
 	//cfss := client.NewServer("http://127.0.0.1:8888")
@@ -108,7 +109,9 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 	//	})
 	//}
 
-	api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(mukadeoperations.IssueCertificateLogic(MukadeFlags))
+	//api.IssueCertificateHandler = operations.IssueCertificateHandlerFunc(mukadeoperations.IssueCertificateLogic(MukadeFlags))
+
+	api.RequestCertificateHandler = operations.RequestCertificateHandlerFunc(mukadeoperations.RequestCertificateLogic(MukadeFlags))
 
 	api.PreServerShutdown = func() {}
 

@@ -48,6 +48,9 @@ func NewMukadeAPI(spec *loads.Document) *MukadeAPI {
 		IssueCertificateHandler: IssueCertificateHandlerFunc(func(params IssueCertificateParams) middleware.Responder {
 			return middleware.NotImplemented("operation IssueCertificate has not yet been implemented")
 		}),
+		RequestCertificateHandler: RequestCertificateHandlerFunc(func(params RequestCertificateParams) middleware.Responder {
+			return middleware.NotImplemented("operation RequestCertificate has not yet been implemented")
+		}),
 		RevokeCertificateHandler: RevokeCertificateHandlerFunc(func(params RevokeCertificateParams) middleware.Responder {
 			return middleware.NotImplemented("operation RevokeCertificate has not yet been implemented")
 		}),
@@ -91,6 +94,8 @@ type MukadeAPI struct {
 	GetCertificateHandler GetCertificateHandler
 	// IssueCertificateHandler sets the operation handler for the issue certificate operation
 	IssueCertificateHandler IssueCertificateHandler
+	// RequestCertificateHandler sets the operation handler for the request certificate operation
+	RequestCertificateHandler RequestCertificateHandler
 	// RevokeCertificateHandler sets the operation handler for the revoke certificate operation
 	RevokeCertificateHandler RevokeCertificateHandler
 
@@ -175,6 +180,9 @@ func (o *MukadeAPI) Validate() error {
 	}
 	if o.IssueCertificateHandler == nil {
 		unregistered = append(unregistered, "IssueCertificateHandler")
+	}
+	if o.RequestCertificateHandler == nil {
+		unregistered = append(unregistered, "RequestCertificateHandler")
 	}
 	if o.RevokeCertificateHandler == nil {
 		unregistered = append(unregistered, "RevokeCertificateHandler")
@@ -275,6 +283,10 @@ func (o *MukadeAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/certificates"] = NewIssueCertificate(o.context, o.IssueCertificateHandler)
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/requests"] = NewRequestCertificate(o.context, o.RequestCertificateHandler)
 	if o.handlers["DELETE"] == nil {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
