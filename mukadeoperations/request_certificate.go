@@ -4,11 +4,14 @@ import (
 
 	//"git.fintechru.org/masterchain/mstor2.git/fakecrypto"
 
+	"crypto/sha1"
 	"fmt"
 	"github.com/cloudflare/cfssl/helpers"
 	"github.com/fastchain/mukade/dbmodels"
 	serveroperations "github.com/fastchain/mukade/restapi/operations"
 	"github.com/go-openapi/runtime/middleware"
+
+	"crypto/x509"
 )
 
 /*
@@ -18,8 +21,9 @@ func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.Req
 
 	return func(params serveroperations.RequestCertificateParams) middleware.Responder {
 
+		//replaced := strings.ReplaceAll(params.CertificateRequest.Raw, "\\n", "")
+		//fmt.Println(replaced)
 		newCSR, err := helpers.ParseCSRPEM([]byte(params.CertificateRequest.Raw))
-		fmt.Println(newCSR.Subject)
 		if err != nil {
 			//return serveroperations.NewRequestCertificateOK().WithPayload(err)
 			panic(err)
@@ -31,14 +35,31 @@ func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.Req
 		//newRequest := dbmodels.Certificate{Req: params.CertificateRequest.Raw }
 		//CertificateRequest
 
-		kk := fmt.Sprint(newCSR.PublicKey)
-		cb := fmt.Sprint(newCSR.Subject)
+		pk := fmt.Sprint(newCSR.PublicKey)
+		cb := fmt.Sprint(newCSR.Subject.Country[0])
+
+		//kk, _ := newCSR.PublicKey.(*rsa.PublicKey)
+		//
+		//h := sha1.New()
+		//h.Write(kk.N.Bytes())
+		//id := hex.EncodeToString(h.Sum(nil))
+
+		// Extract the public key from the CSR
+		pubKeyBytes, err := x509.MarshalPKIXPublicKey(newCSR.PublicKey)
+		if err != nil {
+			panic(err)
+		}
+
+		// Compute the public key identifier (SHA-1 hash of the public key)
+		pubKeyID := sha1.Sum(pubKeyBytes)
+		pubKeyIDStr := fmt.Sprintf("%x", pubKeyID)
 
 		newRequest := dbmodels.CertificateRequest{
 
-			PublicKey: &kk,
+			PublicKey: &pk,
 			Raw:       params.CertificateRequest.Raw,
 			Subject:   &cb,
+			ID:        pubKeyIDStr,
 		}
 		result := dbmodels.DB.Create(&newRequest)
 		if result.Error != nil {

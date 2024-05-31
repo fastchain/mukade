@@ -11,6 +11,28 @@ produces:
   - 'application/json'
 
 paths:
+  /crl.crl:
+    get:
+      summary: 'Request a latest CRL'
+      description: 'Provide the latest CRL'
+      operationId: 'requestCRL'
+#      parameters:
+#        - name: 'certificateRequest'
+#          in: 'body'
+#          required: true
+#          schema:
+#            $ref: '#/definitions/CertificateRequest'
+      produces:
+        - 'application/octet-stream'
+      responses:
+        200:
+          description: 'Request processed'
+          schema:
+            type: 'file'
+        400:
+          description: 'Invalid request'
+        500:
+          description: 'Internal server error'
   /requests:
     post:
       summary: 'Request a new certificate'
@@ -109,6 +131,15 @@ paths:
           description: 'Internal server error'
 
 definitions:
+  CRL:
+    type: 'object'
+    required:
+      - 'raw'
+    properties:
+      raw:
+        type: 'string'
+        description: 'BASE64(DER) encoded CRL'
+
   CertificateRequest:
     type: 'object'
     required:
@@ -124,6 +155,9 @@ definitions:
       raw:
         type: 'string'
         description: 'Raw request as string'
+      id:
+        type: 'string'
+        description: 'PubKey hash'
 
   Certificate:
     type: 'object'
@@ -151,3 +185,17 @@ definitions:
       req:
         type: 'string'
         description: 'Certificate Request'
+      serial:
+        type: 'string'
+        description: 'Certificate Serial'
+      id:
+        type: 'string'
+        description: 'PubKey hash'
+      aki:
+        type: string
+        description: 'Authority Key ID'
+      bundle:
+        type: string
+        description: 'Certificate bundle'
+
+

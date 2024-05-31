@@ -19,12 +19,21 @@ import (
 // swagger:model Certificate
 type Certificate struct {
 
+	// Authority Key ID
+	Aki string `json:"aki,omitempty"`
+
+	// Certificate bundle
+	Bundle string `json:"bundle,omitempty"`
+
 	// Unique identifier for the certificate.
 	CertificateID string `json:"certificateId,omitempty"`
 
 	// Expiration date of the certificate.
 	// Format: date-time
 	ExpiresOn strfmt.DateTime `json:"expiresOn,omitempty"`
+
+	// PubKey hash
+	ID string `json:"id,omitempty"`
 
 	// Date and time the certificate was issued.
 	// Format: date-time
@@ -35,6 +44,9 @@ type Certificate struct {
 
 	// Certificate Request
 	Req string `json:"req,omitempty"`
+
+	// Certificate Serial
+	Serial string `json:"serial,omitempty"`
 
 	// Current status of the certificate (e.g., active, revoked).
 	Status string `json:"status,omitempty"`

@@ -19,6 +19,9 @@ import (
 // swagger:model CertificateRequest
 type CertificateRequest struct {
 
+	// PubKey hash
+	ID string `json:"id,omitempty"`
+
 	// Public key to be associated with the certificate.
 	// Required: true
 	PublicKey *string `json:"publicKey"`

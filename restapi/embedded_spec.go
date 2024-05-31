@@ -116,6 +116,30 @@ func init() {
         }
       }
     },
+    "/crl.crl": {
+      "get": {
+        "description": "Provide the latest CRL",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "summary": "Request a latest CRL",
+        "operationId": "requestCRL",
+        "responses": {
+          "200": {
+            "description": "Request processed",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/requests": {
       "post": {
         "description": "Request the issuance of a new digital certificate.",
@@ -175,9 +199,29 @@ func init() {
     }
   },
   "definitions": {
+    "CRL": {
+      "type": "object",
+      "required": [
+        "raw"
+      ],
+      "properties": {
+        "raw": {
+          "description": "BASE64(DER) encoded CRL",
+          "type": "string"
+        }
+      }
+    },
     "Certificate": {
       "type": "object",
       "properties": {
+        "aki": {
+          "description": "Authority Key ID",
+          "type": "string"
+        },
+        "bundle": {
+          "description": "Certificate bundle",
+          "type": "string"
+        },
         "certificateId": {
           "description": "Unique identifier for the certificate.",
           "type": "string"
@@ -186,6 +230,10 @@ func init() {
           "description": "Expiration date of the certificate.",
           "type": "string",
           "format": "date-time"
+        },
+        "id": {
+          "description": "PubKey hash",
+          "type": "string"
         },
         "issuedOn": {
           "description": "Date and time the certificate was issued.",
@@ -198,6 +246,10 @@ func init() {
         },
         "req": {
           "description": "Certificate Request",
+          "type": "string"
+        },
+        "serial": {
+          "description": "Certificate Serial",
           "type": "string"
         },
         "status": {
@@ -217,6 +269,10 @@ func init() {
         "publicKey"
       ],
       "properties": {
+        "id": {
+          "description": "PubKey hash",
+          "type": "string"
+        },
         "publicKey": {
           "description": "Public key to be associated with the certificate.",
           "type": "string"
@@ -332,6 +388,30 @@ func init() {
         }
       }
     },
+    "/crl.crl": {
+      "get": {
+        "description": "Provide the latest CRL",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "summary": "Request a latest CRL",
+        "operationId": "requestCRL",
+        "responses": {
+          "200": {
+            "description": "Request processed",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/requests": {
       "post": {
         "description": "Request the issuance of a new digital certificate.",
@@ -391,9 +471,29 @@ func init() {
     }
   },
   "definitions": {
+    "CRL": {
+      "type": "object",
+      "required": [
+        "raw"
+      ],
+      "properties": {
+        "raw": {
+          "description": "BASE64(DER) encoded CRL",
+          "type": "string"
+        }
+      }
+    },
     "Certificate": {
       "type": "object",
       "properties": {
+        "aki": {
+          "description": "Authority Key ID",
+          "type": "string"
+        },
+        "bundle": {
+          "description": "Certificate bundle",
+          "type": "string"
+        },
         "certificateId": {
           "description": "Unique identifier for the certificate.",
           "type": "string"
@@ -402,6 +502,10 @@ func init() {
           "description": "Expiration date of the certificate.",
           "type": "string",
           "format": "date-time"
+        },
+        "id": {
+          "description": "PubKey hash",
+          "type": "string"
         },
         "issuedOn": {
           "description": "Date and time the certificate was issued.",
@@ -414,6 +518,10 @@ func init() {
         },
         "req": {
           "description": "Certificate Request",
+          "type": "string"
+        },
+        "serial": {
+          "description": "Certificate Serial",
           "type": "string"
         },
         "status": {
@@ -433,6 +541,10 @@ func init() {
         "publicKey"
       ],
       "properties": {
+        "id": {
+          "description": "PubKey hash",
+          "type": "string"
+        },
         "publicKey": {
           "description": "Public key to be associated with the certificate.",
           "type": "string"

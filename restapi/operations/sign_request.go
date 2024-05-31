@@ -29,12 +29,12 @@ func NewSignRequest(ctx *middleware.Context, handler SignRequestHandler) *SignRe
 	return &SignRequest{Context: ctx, Handler: handler}
 }
 
-/*SignRequest swagger:route GET /requests/{requestId} signRequest
+/*
+	SignRequest swagger:route GET /requests/{requestId} signRequest
 
-Issue certificate on request
+# Issue certificate on request
 
 Request the issuance of a new digital certificate.
-
 */
 type SignRequest struct {
 	Context *middleware.Context
@@ -44,7 +44,7 @@ type SignRequest struct {
 func (o *SignRequest) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		r = rCtx
+		*r = *rCtx
 	}
 	var Params = NewSignRequestParams()
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params

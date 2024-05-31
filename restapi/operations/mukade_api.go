@@ -40,6 +40,7 @@ func NewMukadeAPI(spec *loads.Document) *MukadeAPI {
 
 		JSONConsumer: runtime.JSONConsumer(),
 
+		BinProducer:  runtime.ByteStreamProducer(),
 		JSONProducer: runtime.JSONProducer(),
 
 		GetCertificateHandler: GetCertificateHandlerFunc(func(params GetCertificateParams) middleware.Responder {
@@ -47,6 +48,9 @@ func NewMukadeAPI(spec *loads.Document) *MukadeAPI {
 		}),
 		IssueCertificateHandler: IssueCertificateHandlerFunc(func(params IssueCertificateParams) middleware.Responder {
 			return middleware.NotImplemented("operation IssueCertificate has not yet been implemented")
+		}),
+		RequestCRLHandler: RequestCRLHandlerFunc(func(params RequestCRLParams) middleware.Responder {
+			return middleware.NotImplemented("operation RequestCRL has not yet been implemented")
 		}),
 		RequestCertificateHandler: RequestCertificateHandlerFunc(func(params RequestCertificateParams) middleware.Responder {
 			return middleware.NotImplemented("operation RequestCertificate has not yet been implemented")
@@ -76,9 +80,11 @@ type MukadeAPI struct {
 	// BasicAuthenticator generates a runtime.Authenticator from the supplied basic auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	BasicAuthenticator func(security.UserPassAuthentication) runtime.Authenticator
+
 	// APIKeyAuthenticator generates a runtime.Authenticator from the supplied token auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	APIKeyAuthenticator func(string, string, security.TokenAuthentication) runtime.Authenticator
+
 	// BearerAuthenticator generates a runtime.Authenticator from the supplied bearer token auth function.
 	// It has a default implementation in the security package, however you can replace it for your particular usage.
 	BearerAuthenticator func(string, security.ScopedTokenAuthentication) runtime.Authenticator
@@ -87,6 +93,9 @@ type MukadeAPI struct {
 	//   - application/json
 	JSONConsumer runtime.Consumer
 
+	// BinProducer registers a producer for the following mime types:
+	//   - application/octet-stream
+	BinProducer runtime.Producer
 	// JSONProducer registers a producer for the following mime types:
 	//   - application/json
 	JSONProducer runtime.Producer
@@ -95,12 +104,15 @@ type MukadeAPI struct {
 	GetCertificateHandler GetCertificateHandler
 	// IssueCertificateHandler sets the operation handler for the issue certificate operation
 	IssueCertificateHandler IssueCertificateHandler
+	// RequestCRLHandler sets the operation handler for the request c r l operation
+	RequestCRLHandler RequestCRLHandler
 	// RequestCertificateHandler sets the operation handler for the request certificate operation
 	RequestCertificateHandler RequestCertificateHandler
 	// RevokeCertificateHandler sets the operation handler for the revoke certificate operation
 	RevokeCertificateHandler RevokeCertificateHandler
 	// SignRequestHandler sets the operation handler for the sign request operation
 	SignRequestHandler SignRequestHandler
+
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
@@ -173,6 +185,9 @@ func (o *MukadeAPI) Validate() error {
 		unregistered = append(unregistered, "JSONConsumer")
 	}
 
+	if o.BinProducer == nil {
+		unregistered = append(unregistered, "BinProducer")
+	}
 	if o.JSONProducer == nil {
 		unregistered = append(unregistered, "JSONProducer")
 	}
@@ -182,6 +197,9 @@ func (o *MukadeAPI) Validate() error {
 	}
 	if o.IssueCertificateHandler == nil {
 		unregistered = append(unregistered, "IssueCertificateHandler")
+	}
+	if o.RequestCRLHandler == nil {
+		unregistered = append(unregistered, "RequestCRLHandler")
 	}
 	if o.RequestCertificateHandler == nil {
 		unregistered = append(unregistered, "RequestCertificateHandler")
@@ -238,6 +256,8 @@ func (o *MukadeAPI) ProducersFor(mediaTypes []string) map[string]runtime.Produce
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
+		case "application/octet-stream":
+			result["application/octet-stream"] = o.BinProducer
 		case "application/json":
 			result["application/json"] = o.JSONProducer
 		}
@@ -288,6 +308,10 @@ func (o *MukadeAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/certificates"] = NewIssueCertificate(o.context, o.IssueCertificateHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/crl.crl"] = NewRequestCRL(o.context, o.RequestCRLHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
@@ -341,6 +365,6 @@ func (o *MukadeAPI) AddMiddlewareFor(method, path string, builder middleware.Bui
 	}
 	o.Init()
 	if h, ok := o.handlers[um][path]; ok {
-		o.handlers[method][path] = builder(h)
+		o.handlers[um][path] = builder(h)
 	}
 }
