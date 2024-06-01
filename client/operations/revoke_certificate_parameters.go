@@ -16,72 +16,56 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewRevokeCertificateParams creates a new RevokeCertificateParams object,
-// with the default timeout for this client.
-//
-// Default values are not hydrated, since defaults are normally applied by the API server side.
-//
-// To enforce default values in parameter, use SetDefaults or WithDefaults.
+// NewRevokeCertificateParams creates a new RevokeCertificateParams object
+// with the default values initialized.
 func NewRevokeCertificateParams() *RevokeCertificateParams {
+	var ()
 	return &RevokeCertificateParams{
+
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewRevokeCertificateParamsWithTimeout creates a new RevokeCertificateParams object
-// with the ability to set a timeout on a request.
+// with the default values initialized, and the ability to set a timeout on a request
 func NewRevokeCertificateParamsWithTimeout(timeout time.Duration) *RevokeCertificateParams {
+	var ()
 	return &RevokeCertificateParams{
+
 		timeout: timeout,
 	}
 }
 
 // NewRevokeCertificateParamsWithContext creates a new RevokeCertificateParams object
-// with the ability to set a context for a request.
+// with the default values initialized, and the ability to set a context for a request
 func NewRevokeCertificateParamsWithContext(ctx context.Context) *RevokeCertificateParams {
+	var ()
 	return &RevokeCertificateParams{
+
 		Context: ctx,
 	}
 }
 
 // NewRevokeCertificateParamsWithHTTPClient creates a new RevokeCertificateParams object
-// with the ability to set a custom HTTPClient for a request.
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewRevokeCertificateParamsWithHTTPClient(client *http.Client) *RevokeCertificateParams {
+	var ()
 	return &RevokeCertificateParams{
 		HTTPClient: client,
 	}
 }
 
-/*
-RevokeCertificateParams contains all the parameters to send to the API endpoint
-
-	for the revoke certificate operation.
-
-	Typically these are written to a http.Request.
+/*RevokeCertificateParams contains all the parameters to send to the API endpoint
+for the revoke certificate operation typically these are written to a http.Request
 */
 type RevokeCertificateParams struct {
 
-	// CertificateID.
+	/*CertificateID*/
 	CertificateID string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
-}
-
-// WithDefaults hydrates default values in the revoke certificate params (not the query body).
-//
-// All values with no default are reset to their zero value.
-func (o *RevokeCertificateParams) WithDefaults() *RevokeCertificateParams {
-	o.SetDefaults()
-	return o
-}
-
-// SetDefaults hydrates default values in the revoke certificate params (not the query body).
-//
-// All values with no default are reset to their zero value.
-func (o *RevokeCertificateParams) SetDefaults() {
-	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the revoke certificate params

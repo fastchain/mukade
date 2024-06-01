@@ -29,12 +29,12 @@ func NewRequestCRL(ctx *middleware.Context, handler RequestCRLHandler) *RequestC
 	return &RequestCRL{Context: ctx, Handler: handler}
 }
 
-/*
-	RequestCRL swagger:route GET /crl.crl requestCRL
+/*RequestCRL swagger:route GET /crl.crl requestCRL
 
-# Request a latest CRL
+Request a latest CRL
 
 Provide the latest CRL
+
 */
 type RequestCRL struct {
 	Context *middleware.Context
@@ -44,7 +44,7 @@ type RequestCRL struct {
 func (o *RequestCRL) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		*r = *rCtx
+		r = rCtx
 	}
 	var Params = NewRequestCRLParams()
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params

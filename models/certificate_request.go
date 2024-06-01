@@ -19,30 +19,28 @@ import (
 // swagger:model CertificateRequest
 type CertificateRequest struct {
 
+	// CN for autoissuer
+	// Required: true
+	Cn *string `json:"cn"`
+
 	// PubKey hash
 	ID string `json:"id,omitempty"`
 
 	// Public key to be associated with the certificate.
-	// Required: true
-	PublicKey *string `json:"publicKey"`
+	PublicKey string `json:"publicKey,omitempty"`
 
 	// Raw request as string
 	Raw string `json:"raw,omitempty"`
 
 	// Name of the entity requesting the certificate.
-	// Required: true
-	Subject *string `json:"subject"`
+	Subject string `json:"subject,omitempty"`
 }
 
 // Validate validates this certificate request
 func (m *CertificateRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validatePublicKey(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSubject(formats); err != nil {
+	if err := m.validateCn(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -52,18 +50,9 @@ func (m *CertificateRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *CertificateRequest) validatePublicKey(formats strfmt.Registry) error {
+func (m *CertificateRequest) validateCn(formats strfmt.Registry) error {
 
-	if err := validate.Required("publicKey", "body", m.PublicKey); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *CertificateRequest) validateSubject(formats strfmt.Registry) error {
-
-	if err := validate.Required("subject", "body", m.Subject); err != nil {
+	if err := validate.Required("cn", "body", m.Cn); err != nil {
 		return err
 	}
 

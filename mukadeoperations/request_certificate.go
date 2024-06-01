@@ -23,44 +23,63 @@ func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.Req
 
 		//replaced := strings.ReplaceAll(params.CertificateRequest.Raw, "\\n", "")
 		//fmt.Println(replaced)
-		newCSR, err := helpers.ParseCSRPEM([]byte(params.CertificateRequest.Raw))
-		if err != nil {
-			//return serveroperations.NewRequestCertificateOK().WithPayload(err)
-			panic(err)
+		var newRequest  dbmodels.CertificateRequest
+		if len(params.CertificateRequest.Raw)!=0 {
+			newCSR, err := helpers.ParseCSRPEM([]byte(params.CertificateRequest.Raw))
+			if err != nil {
+				//return serveroperations.NewRequestCertificateOK().WithPayload(err)
+				panic(err)
+			}
+
+			//Saving new line data
+
+			//newCSR.PublicKey
+			//newRequest := dbmodels.Certificate{Req: params.CertificateRequest.Raw }
+			//CertificateRequest
+
+			pk := fmt.Sprint(newCSR.PublicKey)
+			cb := fmt.Sprint(newCSR.Subject)
+
+			//kk, _ := newCSR.PublicKey.(*rsa.PublicKey)
+			//
+			//h := sha1.New()
+			//h.Write(kk.N.Bytes())
+			//id := hex.EncodeToString(h.Sum(nil))
+
+			// Extract the public key from the CSR
+			pubKeyBytes, err := x509.MarshalPKIXPublicKey(newCSR.PublicKey)
+			if err != nil {
+				panic(err)
+			}
+
+			// Compute the public key identifier (SHA-1 hash of the public key)
+			pubKeyID := sha1.Sum(pubKeyBytes)
+			pubKeyIDStr := fmt.Sprintf("%x", pubKeyID)
+
+			newRequest = dbmodels.CertificateRequest{
+
+				PublicKey: pk,
+				Raw:       params.CertificateRequest.Raw,
+				Subject:   cb,
+				ID:        pubKeyIDStr,
+				Cn:        params.CertificateRequest.Cn,
+			}
+		} else {
+
+
+
+			// Compute the public key identifier (SHA-1 hash of the public key)
+			pubKeyID := sha1.Sum([]byte(fmt.Sprint(params.CertificateRequest.Cn)))
+			pubKeyIDStr := fmt.Sprintf("%x", pubKeyID)
+
+			newRequest = dbmodels.CertificateRequest{
+
+				Raw:       params.CertificateRequest.Raw,
+				ID:        pubKeyIDStr,
+				Cn:        params.CertificateRequest.Cn,
+			}
 		}
 
-		//Saving new line data
-
-		//newCSR.PublicKey
-		//newRequest := dbmodels.Certificate{Req: params.CertificateRequest.Raw }
-		//CertificateRequest
-
-		pk := fmt.Sprint(newCSR.PublicKey)
-		cb := fmt.Sprint(newCSR.Subject.Country[0])
-
-		//kk, _ := newCSR.PublicKey.(*rsa.PublicKey)
-		//
-		//h := sha1.New()
-		//h.Write(kk.N.Bytes())
-		//id := hex.EncodeToString(h.Sum(nil))
-
-		// Extract the public key from the CSR
-		pubKeyBytes, err := x509.MarshalPKIXPublicKey(newCSR.PublicKey)
-		if err != nil {
-			panic(err)
-		}
-
-		// Compute the public key identifier (SHA-1 hash of the public key)
-		pubKeyID := sha1.Sum(pubKeyBytes)
-		pubKeyIDStr := fmt.Sprintf("%x", pubKeyID)
-
-		newRequest := dbmodels.CertificateRequest{
-
-			PublicKey: &pk,
-			Raw:       params.CertificateRequest.Raw,
-			Subject:   &cb,
-			ID:        pubKeyIDStr,
-		}
 		result := dbmodels.DB.Create(&newRequest)
 		if result.Error != nil {
 			//serveroperations.

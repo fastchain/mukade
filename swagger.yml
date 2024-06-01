@@ -93,6 +93,8 @@ paths:
         500:
           description: 'Internal server error'
 
+
+
   /certificates/{certificateId}:
     get:
       summary: 'Get certificate status'
@@ -143,8 +145,7 @@ definitions:
   CertificateRequest:
     type: 'object'
     required:
-      - 'subject'
-      - 'publicKey'
+      - 'cn'
     properties:
       subject:
         type: 'string'
@@ -158,6 +159,10 @@ definitions:
       id:
         type: 'string'
         description: 'PubKey hash'
+      cn:
+        type: 'string'
+        description: 'CN for autoissuer'
+
 
   Certificate:
     type: 'object'

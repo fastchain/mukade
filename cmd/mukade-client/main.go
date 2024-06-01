@@ -65,13 +65,15 @@ func main() {
 
 	// Create a new request (example using a 'getSomething' operation)
 	var cr models.CertificateRequest
-	raw := string(csrPem)
-	pk := "aaa"
+	_ = string(csrPem)
+	_ = "aaa"
+	newcn := "eXample.com"
 	subj := csrTemplate.Subject.String()
 
-	cr.PublicKey = &pk
-	cr.Subject = &subj
-	cr.Raw = raw
+	//cr.PublicKey = pk
+	cr.Subject = subj
+	//cr.Raw = raw
+	cr.Cn = &newcn
 
 	//"publicKey":"aaa","subject":"aa","raw"
 
@@ -92,7 +94,7 @@ func main() {
 	// Handle the response
 	fmt.Println(response.Payload.ID)
 
-	// Create a new request (example using a 'getSomething' operation)
+	// Sign certificare request
 	sigparams := clientoperations.SignRequestParams{RequestID: response.Payload.ID}
 
 	// Make the request
@@ -102,7 +104,7 @@ func main() {
 	}
 
 	// Handle the response
-	fmt.Println(response2.String())
+	fmt.Println(response2)
 
 	// Create a new request (example using a 'getSomething' operation)
 	revokeparams := clientoperations.RevokeCertificateParams{CertificateID: response.Payload.ID}
@@ -114,7 +116,7 @@ func main() {
 	}
 
 	// Handle the response
-	fmt.Println(response3.String())
+	fmt.Println(response3)
 
 	// Create a new request (example using a 'getSomething' operation)
 	crlparams := clientoperations.RequestCRLParams{}
@@ -154,4 +156,15 @@ func main() {
 
 	// Print the CRL signature
 	//fmt.Printf("Signature: %s\n", hex.EncodeToString(crl.SignatureValue))
+
+	//Request certificate
+
+	certreq := clientoperations.GetCertificateParams{CertificateID: response.Payload.ID}
+
+	// Make the request
+	response4, err := mClient.Operations.GetCertificate(&certreq)
+	if err != nil {
+		log.Fatalf("Error making request: %v", err)
+	}
+	fmt.Println(response4.Payload.Bundle)
 }

@@ -16,72 +16,56 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewSignRequestParams creates a new SignRequestParams object,
-// with the default timeout for this client.
-//
-// Default values are not hydrated, since defaults are normally applied by the API server side.
-//
-// To enforce default values in parameter, use SetDefaults or WithDefaults.
+// NewSignRequestParams creates a new SignRequestParams object
+// with the default values initialized.
 func NewSignRequestParams() *SignRequestParams {
+	var ()
 	return &SignRequestParams{
+
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewSignRequestParamsWithTimeout creates a new SignRequestParams object
-// with the ability to set a timeout on a request.
+// with the default values initialized, and the ability to set a timeout on a request
 func NewSignRequestParamsWithTimeout(timeout time.Duration) *SignRequestParams {
+	var ()
 	return &SignRequestParams{
+
 		timeout: timeout,
 	}
 }
 
 // NewSignRequestParamsWithContext creates a new SignRequestParams object
-// with the ability to set a context for a request.
+// with the default values initialized, and the ability to set a context for a request
 func NewSignRequestParamsWithContext(ctx context.Context) *SignRequestParams {
+	var ()
 	return &SignRequestParams{
+
 		Context: ctx,
 	}
 }
 
 // NewSignRequestParamsWithHTTPClient creates a new SignRequestParams object
-// with the ability to set a custom HTTPClient for a request.
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewSignRequestParamsWithHTTPClient(client *http.Client) *SignRequestParams {
+	var ()
 	return &SignRequestParams{
 		HTTPClient: client,
 	}
 }
 
-/*
-SignRequestParams contains all the parameters to send to the API endpoint
-
-	for the sign request operation.
-
-	Typically these are written to a http.Request.
+/*SignRequestParams contains all the parameters to send to the API endpoint
+for the sign request operation typically these are written to a http.Request
 */
 type SignRequestParams struct {
 
-	// RequestID.
+	/*RequestID*/
 	RequestID string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
-}
-
-// WithDefaults hydrates default values in the sign request params (not the query body).
-//
-// All values with no default are reset to their zero value.
-func (o *SignRequestParams) WithDefaults() *SignRequestParams {
-	o.SetDefaults()
-	return o
-}
-
-// SetDefaults hydrates default values in the sign request params (not the query body).
-//
-// All values with no default are reset to their zero value.
-func (o *SignRequestParams) SetDefaults() {
-	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the sign request params

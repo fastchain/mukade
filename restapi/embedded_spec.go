@@ -265,10 +265,13 @@ func init() {
     "CertificateRequest": {
       "type": "object",
       "required": [
-        "subject",
-        "publicKey"
+        "cn"
       ],
       "properties": {
+        "cn": {
+          "description": "CN for autoissuer",
+          "type": "string"
+        },
         "id": {
           "description": "PubKey hash",
           "type": "string"
@@ -537,10 +540,13 @@ func init() {
     "CertificateRequest": {
       "type": "object",
       "required": [
-        "subject",
-        "publicKey"
+        "cn"
       ],
       "properties": {
+        "cn": {
+          "description": "CN for autoissuer",
+          "type": "string"
+        },
         "id": {
           "description": "PubKey hash",
           "type": "string"

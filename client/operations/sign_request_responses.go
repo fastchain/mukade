@@ -38,8 +38,9 @@ func (o *SignRequestReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("[GET /requests/{requestId}] signRequest", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
@@ -48,49 +49,14 @@ func NewSignRequestOK() *SignRequestOK {
 	return &SignRequestOK{}
 }
 
-/*
-SignRequestOK describes a response with status code 200, with default header values.
+/*SignRequestOK handles this case with default header values.
 
 Request processed
 */
 type SignRequestOK struct {
 }
 
-// IsSuccess returns true when this sign request o k response has a 2xx status code
-func (o *SignRequestOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this sign request o k response has a 3xx status code
-func (o *SignRequestOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this sign request o k response has a 4xx status code
-func (o *SignRequestOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this sign request o k response has a 5xx status code
-func (o *SignRequestOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this sign request o k response a status code equal to that given
-func (o *SignRequestOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the sign request o k response
-func (o *SignRequestOK) Code() int {
-	return 200
-}
-
 func (o *SignRequestOK) Error() string {
-	return fmt.Sprintf("[GET /requests/{requestId}][%d] signRequestOK ", 200)
-}
-
-func (o *SignRequestOK) String() string {
 	return fmt.Sprintf("[GET /requests/{requestId}][%d] signRequestOK ", 200)
 }
 
@@ -104,49 +70,14 @@ func NewSignRequestBadRequest() *SignRequestBadRequest {
 	return &SignRequestBadRequest{}
 }
 
-/*
-SignRequestBadRequest describes a response with status code 400, with default header values.
+/*SignRequestBadRequest handles this case with default header values.
 
 Invalid request
 */
 type SignRequestBadRequest struct {
 }
 
-// IsSuccess returns true when this sign request bad request response has a 2xx status code
-func (o *SignRequestBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this sign request bad request response has a 3xx status code
-func (o *SignRequestBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this sign request bad request response has a 4xx status code
-func (o *SignRequestBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this sign request bad request response has a 5xx status code
-func (o *SignRequestBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this sign request bad request response a status code equal to that given
-func (o *SignRequestBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the sign request bad request response
-func (o *SignRequestBadRequest) Code() int {
-	return 400
-}
-
 func (o *SignRequestBadRequest) Error() string {
-	return fmt.Sprintf("[GET /requests/{requestId}][%d] signRequestBadRequest ", 400)
-}
-
-func (o *SignRequestBadRequest) String() string {
 	return fmt.Sprintf("[GET /requests/{requestId}][%d] signRequestBadRequest ", 400)
 }
 
@@ -160,49 +91,14 @@ func NewSignRequestInternalServerError() *SignRequestInternalServerError {
 	return &SignRequestInternalServerError{}
 }
 
-/*
-SignRequestInternalServerError describes a response with status code 500, with default header values.
+/*SignRequestInternalServerError handles this case with default header values.
 
 Internal server error
 */
 type SignRequestInternalServerError struct {
 }
 
-// IsSuccess returns true when this sign request internal server error response has a 2xx status code
-func (o *SignRequestInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this sign request internal server error response has a 3xx status code
-func (o *SignRequestInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this sign request internal server error response has a 4xx status code
-func (o *SignRequestInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this sign request internal server error response has a 5xx status code
-func (o *SignRequestInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this sign request internal server error response a status code equal to that given
-func (o *SignRequestInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the sign request internal server error response
-func (o *SignRequestInternalServerError) Code() int {
-	return 500
-}
-
 func (o *SignRequestInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /requests/{requestId}][%d] signRequestInternalServerError ", 500)
-}
-
-func (o *SignRequestInternalServerError) String() string {
 	return fmt.Sprintf("[GET /requests/{requestId}][%d] signRequestInternalServerError ", 500)
 }
 

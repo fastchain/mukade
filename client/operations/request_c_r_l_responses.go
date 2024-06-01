@@ -40,21 +40,20 @@ func (o *RequestCRLReader) ReadResponse(response runtime.ClientResponse, consume
 			return nil, err
 		}
 		return nil, result
+
 	default:
-		return nil, runtime.NewAPIError("[GET /crl.crl] requestCRL", response, response.Code())
+		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
 }
 
 // NewRequestCRLOK creates a RequestCRLOK with default headers values
 func NewRequestCRLOK(writer io.Writer) *RequestCRLOK {
 	return &RequestCRLOK{
-
 		Payload: writer,
 	}
 }
 
-/*
-RequestCRLOK describes a response with status code 200, with default header values.
+/*RequestCRLOK handles this case with default header values.
 
 Request processed
 */
@@ -62,41 +61,7 @@ type RequestCRLOK struct {
 	Payload io.Writer
 }
 
-// IsSuccess returns true when this request c r l o k response has a 2xx status code
-func (o *RequestCRLOK) IsSuccess() bool {
-	return true
-}
-
-// IsRedirect returns true when this request c r l o k response has a 3xx status code
-func (o *RequestCRLOK) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this request c r l o k response has a 4xx status code
-func (o *RequestCRLOK) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this request c r l o k response has a 5xx status code
-func (o *RequestCRLOK) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this request c r l o k response a status code equal to that given
-func (o *RequestCRLOK) IsCode(code int) bool {
-	return code == 200
-}
-
-// Code gets the status code for the request c r l o k response
-func (o *RequestCRLOK) Code() int {
-	return 200
-}
-
 func (o *RequestCRLOK) Error() string {
-	return fmt.Sprintf("[GET /crl.crl][%d] requestCRLOK  %+v", 200, o.Payload)
-}
-
-func (o *RequestCRLOK) String() string {
 	return fmt.Sprintf("[GET /crl.crl][%d] requestCRLOK  %+v", 200, o.Payload)
 }
 
@@ -119,49 +84,14 @@ func NewRequestCRLBadRequest() *RequestCRLBadRequest {
 	return &RequestCRLBadRequest{}
 }
 
-/*
-RequestCRLBadRequest describes a response with status code 400, with default header values.
+/*RequestCRLBadRequest handles this case with default header values.
 
 Invalid request
 */
 type RequestCRLBadRequest struct {
 }
 
-// IsSuccess returns true when this request c r l bad request response has a 2xx status code
-func (o *RequestCRLBadRequest) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this request c r l bad request response has a 3xx status code
-func (o *RequestCRLBadRequest) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this request c r l bad request response has a 4xx status code
-func (o *RequestCRLBadRequest) IsClientError() bool {
-	return true
-}
-
-// IsServerError returns true when this request c r l bad request response has a 5xx status code
-func (o *RequestCRLBadRequest) IsServerError() bool {
-	return false
-}
-
-// IsCode returns true when this request c r l bad request response a status code equal to that given
-func (o *RequestCRLBadRequest) IsCode(code int) bool {
-	return code == 400
-}
-
-// Code gets the status code for the request c r l bad request response
-func (o *RequestCRLBadRequest) Code() int {
-	return 400
-}
-
 func (o *RequestCRLBadRequest) Error() string {
-	return fmt.Sprintf("[GET /crl.crl][%d] requestCRLBadRequest ", 400)
-}
-
-func (o *RequestCRLBadRequest) String() string {
 	return fmt.Sprintf("[GET /crl.crl][%d] requestCRLBadRequest ", 400)
 }
 
@@ -175,49 +105,14 @@ func NewRequestCRLInternalServerError() *RequestCRLInternalServerError {
 	return &RequestCRLInternalServerError{}
 }
 
-/*
-RequestCRLInternalServerError describes a response with status code 500, with default header values.
+/*RequestCRLInternalServerError handles this case with default header values.
 
 Internal server error
 */
 type RequestCRLInternalServerError struct {
 }
 
-// IsSuccess returns true when this request c r l internal server error response has a 2xx status code
-func (o *RequestCRLInternalServerError) IsSuccess() bool {
-	return false
-}
-
-// IsRedirect returns true when this request c r l internal server error response has a 3xx status code
-func (o *RequestCRLInternalServerError) IsRedirect() bool {
-	return false
-}
-
-// IsClientError returns true when this request c r l internal server error response has a 4xx status code
-func (o *RequestCRLInternalServerError) IsClientError() bool {
-	return false
-}
-
-// IsServerError returns true when this request c r l internal server error response has a 5xx status code
-func (o *RequestCRLInternalServerError) IsServerError() bool {
-	return true
-}
-
-// IsCode returns true when this request c r l internal server error response a status code equal to that given
-func (o *RequestCRLInternalServerError) IsCode(code int) bool {
-	return code == 500
-}
-
-// Code gets the status code for the request c r l internal server error response
-func (o *RequestCRLInternalServerError) Code() int {
-	return 500
-}
-
 func (o *RequestCRLInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /crl.crl][%d] requestCRLInternalServerError ", 500)
-}
-
-func (o *RequestCRLInternalServerError) String() string {
 	return fmt.Sprintf("[GET /crl.crl][%d] requestCRLInternalServerError ", 500)
 }
 

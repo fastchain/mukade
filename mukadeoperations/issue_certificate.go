@@ -32,9 +32,11 @@ func IssueCertificateLogic(Flags MukadeFlags) func(params serveroperations.Issue
 
 		kk := fmt.Sprint(newCSR.PublicKey)
 
-		newRequest := dbmodels.CertificateRequest{Subject: &newCSR.Subject.Organization[0],
-			PublicKey: &kk,
+
+		newRequest := dbmodels.CertificateRequest{Subject: newCSR.Subject.Organization[0],
+			PublicKey: kk,
 			Raw:       params.CertificateRequest.Raw,
+
 		}
 		result := dbmodels.DB.Create(&newRequest)
 		if result.Error != nil {
