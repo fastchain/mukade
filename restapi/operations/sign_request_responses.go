@@ -14,7 +14,8 @@ import (
 // SignRequestOKCode is the HTTP code returned for type SignRequestOK
 const SignRequestOKCode int = 200
 
-/*SignRequestOK Request processed
+/*
+SignRequestOK Request processed
 
 swagger:response signRequestOK
 */
@@ -38,7 +39,8 @@ func (o *SignRequestOK) WriteResponse(rw http.ResponseWriter, producer runtime.P
 // SignRequestBadRequestCode is the HTTP code returned for type SignRequestBadRequest
 const SignRequestBadRequestCode int = 400
 
-/*SignRequestBadRequest Invalid request
+/*
+SignRequestBadRequest Invalid request
 
 swagger:response signRequestBadRequest
 */
@@ -62,7 +64,8 @@ func (o *SignRequestBadRequest) WriteResponse(rw http.ResponseWriter, producer r
 // SignRequestInternalServerErrorCode is the HTTP code returned for type SignRequestInternalServerError
 const SignRequestInternalServerErrorCode int = 500
 
-/*SignRequestInternalServerError Internal server error
+/*
+SignRequestInternalServerError Internal server error
 
 swagger:response signRequestInternalServerError
 */

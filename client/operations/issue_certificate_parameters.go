@@ -18,56 +18,72 @@ import (
 	"github.com/fastchain/mukade/models"
 )
 
-// NewIssueCertificateParams creates a new IssueCertificateParams object
-// with the default values initialized.
+// NewIssueCertificateParams creates a new IssueCertificateParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewIssueCertificateParams() *IssueCertificateParams {
-	var ()
 	return &IssueCertificateParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewIssueCertificateParamsWithTimeout creates a new IssueCertificateParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewIssueCertificateParamsWithTimeout(timeout time.Duration) *IssueCertificateParams {
-	var ()
 	return &IssueCertificateParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewIssueCertificateParamsWithContext creates a new IssueCertificateParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewIssueCertificateParamsWithContext(ctx context.Context) *IssueCertificateParams {
-	var ()
 	return &IssueCertificateParams{
-
 		Context: ctx,
 	}
 }
 
 // NewIssueCertificateParamsWithHTTPClient creates a new IssueCertificateParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewIssueCertificateParamsWithHTTPClient(client *http.Client) *IssueCertificateParams {
-	var ()
 	return &IssueCertificateParams{
 		HTTPClient: client,
 	}
 }
 
-/*IssueCertificateParams contains all the parameters to send to the API endpoint
-for the issue certificate operation typically these are written to a http.Request
+/*
+IssueCertificateParams contains all the parameters to send to the API endpoint
+
+	for the issue certificate operation.
+
+	Typically these are written to a http.Request.
 */
 type IssueCertificateParams struct {
 
-	/*CertificateRequest*/
+	// CertificateRequest.
 	CertificateRequest *models.CertificateRequest
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the issue certificate params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *IssueCertificateParams) WithDefaults() *IssueCertificateParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the issue certificate params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *IssueCertificateParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the issue certificate params
@@ -121,7 +137,6 @@ func (o *IssueCertificateParams) WriteToRequest(r runtime.ClientRequest, reg str
 		return err
 	}
 	var res []error
-
 	if o.CertificateRequest != nil {
 		if err := r.SetBodyParam(o.CertificateRequest); err != nil {
 			return err

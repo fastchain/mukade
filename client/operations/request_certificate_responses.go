@@ -41,9 +41,8 @@ func (o *RequestCertificateReader) ReadResponse(response runtime.ClientResponse,
 			return nil, err
 		}
 		return nil, result
-
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /requests] requestCertificate", response, response.Code())
 	}
 }
 
@@ -52,7 +51,8 @@ func NewRequestCertificateOK() *RequestCertificateOK {
 	return &RequestCertificateOK{}
 }
 
-/*RequestCertificateOK handles this case with default header values.
+/*
+RequestCertificateOK describes a response with status code 200, with default header values.
 
 Certificate requested successfully
 */
@@ -60,7 +60,41 @@ type RequestCertificateOK struct {
 	Payload *models.CertificateRequest
 }
 
+// IsSuccess returns true when this request certificate o k response has a 2xx status code
+func (o *RequestCertificateOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this request certificate o k response has a 3xx status code
+func (o *RequestCertificateOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this request certificate o k response has a 4xx status code
+func (o *RequestCertificateOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this request certificate o k response has a 5xx status code
+func (o *RequestCertificateOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this request certificate o k response a status code equal to that given
+func (o *RequestCertificateOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the request certificate o k response
+func (o *RequestCertificateOK) Code() int {
+	return 200
+}
+
 func (o *RequestCertificateOK) Error() string {
+	return fmt.Sprintf("[POST /requests][%d] requestCertificateOK  %+v", 200, o.Payload)
+}
+
+func (o *RequestCertificateOK) String() string {
 	return fmt.Sprintf("[POST /requests][%d] requestCertificateOK  %+v", 200, o.Payload)
 }
 
@@ -85,14 +119,49 @@ func NewRequestCertificateBadRequest() *RequestCertificateBadRequest {
 	return &RequestCertificateBadRequest{}
 }
 
-/*RequestCertificateBadRequest handles this case with default header values.
+/*
+RequestCertificateBadRequest describes a response with status code 400, with default header values.
 
 Invalid request
 */
 type RequestCertificateBadRequest struct {
 }
 
+// IsSuccess returns true when this request certificate bad request response has a 2xx status code
+func (o *RequestCertificateBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this request certificate bad request response has a 3xx status code
+func (o *RequestCertificateBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this request certificate bad request response has a 4xx status code
+func (o *RequestCertificateBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this request certificate bad request response has a 5xx status code
+func (o *RequestCertificateBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this request certificate bad request response a status code equal to that given
+func (o *RequestCertificateBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the request certificate bad request response
+func (o *RequestCertificateBadRequest) Code() int {
+	return 400
+}
+
 func (o *RequestCertificateBadRequest) Error() string {
+	return fmt.Sprintf("[POST /requests][%d] requestCertificateBadRequest ", 400)
+}
+
+func (o *RequestCertificateBadRequest) String() string {
 	return fmt.Sprintf("[POST /requests][%d] requestCertificateBadRequest ", 400)
 }
 
@@ -106,14 +175,49 @@ func NewRequestCertificateInternalServerError() *RequestCertificateInternalServe
 	return &RequestCertificateInternalServerError{}
 }
 
-/*RequestCertificateInternalServerError handles this case with default header values.
+/*
+RequestCertificateInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */
 type RequestCertificateInternalServerError struct {
 }
 
+// IsSuccess returns true when this request certificate internal server error response has a 2xx status code
+func (o *RequestCertificateInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this request certificate internal server error response has a 3xx status code
+func (o *RequestCertificateInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this request certificate internal server error response has a 4xx status code
+func (o *RequestCertificateInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this request certificate internal server error response has a 5xx status code
+func (o *RequestCertificateInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this request certificate internal server error response a status code equal to that given
+func (o *RequestCertificateInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the request certificate internal server error response
+func (o *RequestCertificateInternalServerError) Code() int {
+	return 500
+}
+
 func (o *RequestCertificateInternalServerError) Error() string {
+	return fmt.Sprintf("[POST /requests][%d] requestCertificateInternalServerError ", 500)
+}
+
+func (o *RequestCertificateInternalServerError) String() string {
 	return fmt.Sprintf("[POST /requests][%d] requestCertificateInternalServerError ", 500)
 }
 

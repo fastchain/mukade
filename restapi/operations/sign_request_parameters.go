@@ -14,7 +14,8 @@ import (
 )
 
 // NewSignRequestParams creates a new SignRequestParams object
-// no default values defined in spec.
+//
+// There are no default values defined in the spec.
 func NewSignRequestParams() SignRequestParams {
 
 	return SignRequestParams{}
@@ -49,7 +50,6 @@ func (o *SignRequestParams) BindRequest(r *http.Request, route *middleware.Match
 	if err := o.bindRequestID(rRequestID, rhkRequestID, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -65,7 +65,6 @@ func (o *SignRequestParams) bindRequestID(rawData []string, hasKey bool, formats
 
 	// Required: true
 	// Parameter is provided by construction from the route
-
 	o.RequestID = raw
 
 	return nil

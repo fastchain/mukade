@@ -18,56 +18,72 @@ import (
 	"github.com/fastchain/mukade/models"
 )
 
-// NewRequestCertificateParams creates a new RequestCertificateParams object
-// with the default values initialized.
+// NewRequestCertificateParams creates a new RequestCertificateParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewRequestCertificateParams() *RequestCertificateParams {
-	var ()
 	return &RequestCertificateParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewRequestCertificateParamsWithTimeout creates a new RequestCertificateParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewRequestCertificateParamsWithTimeout(timeout time.Duration) *RequestCertificateParams {
-	var ()
 	return &RequestCertificateParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewRequestCertificateParamsWithContext creates a new RequestCertificateParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewRequestCertificateParamsWithContext(ctx context.Context) *RequestCertificateParams {
-	var ()
 	return &RequestCertificateParams{
-
 		Context: ctx,
 	}
 }
 
 // NewRequestCertificateParamsWithHTTPClient creates a new RequestCertificateParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewRequestCertificateParamsWithHTTPClient(client *http.Client) *RequestCertificateParams {
-	var ()
 	return &RequestCertificateParams{
 		HTTPClient: client,
 	}
 }
 
-/*RequestCertificateParams contains all the parameters to send to the API endpoint
-for the request certificate operation typically these are written to a http.Request
+/*
+RequestCertificateParams contains all the parameters to send to the API endpoint
+
+	for the request certificate operation.
+
+	Typically these are written to a http.Request.
 */
 type RequestCertificateParams struct {
 
-	/*CertificateRequest*/
+	// CertificateRequest.
 	CertificateRequest *models.CertificateRequest
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the request certificate params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *RequestCertificateParams) WithDefaults() *RequestCertificateParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the request certificate params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *RequestCertificateParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the request certificate params
@@ -121,7 +137,6 @@ func (o *RequestCertificateParams) WriteToRequest(r runtime.ClientRequest, reg s
 		return err
 	}
 	var res []error
-
 	if o.CertificateRequest != nil {
 		if err := r.SetBodyParam(o.CertificateRequest); err != nil {
 			return err

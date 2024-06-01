@@ -116,6 +116,38 @@ func init() {
         }
       }
     },
+    "/certificates/{certificateId}/pfx": {
+      "get": {
+        "description": "Retrieve pxf bundle for generated certificates",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "summary": "Get certificate pfx",
+        "operationId": "getPFX",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "certificateId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request processed",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "404": {
+            "description": "Certificate not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/crl.crl": {
       "get": {
         "description": "Provide the latest CRL",
@@ -244,8 +276,20 @@ func init() {
           "description": "PEM encoding",
           "type": "string"
         },
+        "pfx": {
+          "description": "PFX container with cert,bundle and key",
+          "type": "string"
+        },
+        "pfxpwd": {
+          "description": "PFX container pwd",
+          "type": "string"
+        },
         "req": {
           "description": "Certificate Request",
+          "type": "string"
+        },
+        "secretkey": {
+          "description": "Private key for generated certificates",
           "type": "string"
         },
         "serial": {
@@ -286,6 +330,18 @@ func init() {
         },
         "subject": {
           "description": "Name of the entity requesting the certificate.",
+          "type": "string"
+        }
+      }
+    },
+    "PFX": {
+      "type": "object",
+      "required": [
+        "raw"
+      ],
+      "properties": {
+        "raw": {
+          "description": "PFX",
           "type": "string"
         }
       }
@@ -391,6 +447,38 @@ func init() {
         }
       }
     },
+    "/certificates/{certificateId}/pfx": {
+      "get": {
+        "description": "Retrieve pxf bundle for generated certificates",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "summary": "Get certificate pfx",
+        "operationId": "getPFX",
+        "parameters": [
+          {
+            "type": "string",
+            "name": "certificateId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request processed",
+            "schema": {
+              "type": "file"
+            }
+          },
+          "404": {
+            "description": "Certificate not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/crl.crl": {
       "get": {
         "description": "Provide the latest CRL",
@@ -519,8 +607,20 @@ func init() {
           "description": "PEM encoding",
           "type": "string"
         },
+        "pfx": {
+          "description": "PFX container with cert,bundle and key",
+          "type": "string"
+        },
+        "pfxpwd": {
+          "description": "PFX container pwd",
+          "type": "string"
+        },
         "req": {
           "description": "Certificate Request",
+          "type": "string"
+        },
+        "secretkey": {
+          "description": "Private key for generated certificates",
           "type": "string"
         },
         "serial": {
@@ -561,6 +661,18 @@ func init() {
         },
         "subject": {
           "description": "Name of the entity requesting the certificate.",
+          "type": "string"
+        }
+      }
+    },
+    "PFX": {
+      "type": "object",
+      "required": [
+        "raw"
+      ],
+      "properties": {
+        "raw": {
+          "description": "PFX",
           "type": "string"
         }
       }

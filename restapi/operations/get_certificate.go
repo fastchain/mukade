@@ -29,12 +29,12 @@ func NewGetCertificate(ctx *middleware.Context, handler GetCertificateHandler) *
 	return &GetCertificate{Context: ctx, Handler: handler}
 }
 
-/*GetCertificate swagger:route GET /certificates/{certificateId} getCertificate
+/*
+	GetCertificate swagger:route GET /certificates/{certificateId} getCertificate
 
-Get certificate status
+# Get certificate status
 
 Retrieve the status and details of a specific certificate.
-
 */
 type GetCertificate struct {
 	Context *middleware.Context
@@ -44,7 +44,7 @@ type GetCertificate struct {
 func (o *GetCertificate) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		r = rCtx
+		*r = *rCtx
 	}
 	var Params = NewGetCertificateParams()
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params

@@ -13,7 +13,8 @@ import (
 )
 
 // NewRequestCRLParams creates a new RequestCRLParams object
-// no default values defined in spec.
+//
+// There are no default values defined in the spec.
 func NewRequestCRLParams() RequestCRLParams {
 
 	return RequestCRLParams{}

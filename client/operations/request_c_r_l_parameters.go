@@ -16,52 +16,68 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewRequestCRLParams creates a new RequestCRLParams object
-// with the default values initialized.
+// NewRequestCRLParams creates a new RequestCRLParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewRequestCRLParams() *RequestCRLParams {
-
 	return &RequestCRLParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewRequestCRLParamsWithTimeout creates a new RequestCRLParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewRequestCRLParamsWithTimeout(timeout time.Duration) *RequestCRLParams {
-
 	return &RequestCRLParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewRequestCRLParamsWithContext creates a new RequestCRLParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewRequestCRLParamsWithContext(ctx context.Context) *RequestCRLParams {
-
 	return &RequestCRLParams{
-
 		Context: ctx,
 	}
 }
 
 // NewRequestCRLParamsWithHTTPClient creates a new RequestCRLParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewRequestCRLParamsWithHTTPClient(client *http.Client) *RequestCRLParams {
-
 	return &RequestCRLParams{
 		HTTPClient: client,
 	}
 }
 
-/*RequestCRLParams contains all the parameters to send to the API endpoint
-for the request c r l operation typically these are written to a http.Request
+/*
+RequestCRLParams contains all the parameters to send to the API endpoint
+
+	for the request c r l operation.
+
+	Typically these are written to a http.Request.
 */
 type RequestCRLParams struct {
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the request c r l params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *RequestCRLParams) WithDefaults() *RequestCRLParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the request c r l params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *RequestCRLParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the request c r l params

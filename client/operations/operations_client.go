@@ -26,35 +26,39 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	GetCertificate(params *GetCertificateParams) (*GetCertificateOK, error)
+	GetCertificate(params *GetCertificateParams, opts ...ClientOption) (*GetCertificateOK, error)
 
-	IssueCertificate(params *IssueCertificateParams) (*IssueCertificateOK, error)
+	GetPFX(params *GetPFXParams, writer io.Writer, opts ...ClientOption) (*GetPFXOK, error)
 
-	RequestCRL(params *RequestCRLParams, writer io.Writer) (*RequestCRLOK, error)
+	IssueCertificate(params *IssueCertificateParams, opts ...ClientOption) (*IssueCertificateOK, error)
 
-	RequestCertificate(params *RequestCertificateParams) (*RequestCertificateOK, error)
+	RequestCRL(params *RequestCRLParams, writer io.Writer, opts ...ClientOption) (*RequestCRLOK, error)
 
-	RevokeCertificate(params *RevokeCertificateParams) (*RevokeCertificateOK, error)
+	RequestCertificate(params *RequestCertificateParams, opts ...ClientOption) (*RequestCertificateOK, error)
 
-	SignRequest(params *SignRequestParams) (*SignRequestOK, error)
+	RevokeCertificate(params *RevokeCertificateParams, opts ...ClientOption) (*RevokeCertificateOK, error)
+
+	SignRequest(params *SignRequestParams, opts ...ClientOption) (*SignRequestOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
 
 /*
-  GetCertificate gets certificate status
+GetCertificate gets certificate status
 
-  Retrieve the status and details of a specific certificate.
+Retrieve the status and details of a specific certificate.
 */
-func (a *Client) GetCertificate(params *GetCertificateParams) (*GetCertificateOK, error) {
+func (a *Client) GetCertificate(params *GetCertificateParams, opts ...ClientOption) (*GetCertificateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetCertificateParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "getCertificate",
 		Method:             "GET",
 		PathPattern:        "/certificates/{certificateId}",
@@ -65,7 +69,12 @@ func (a *Client) GetCertificate(params *GetCertificateParams) (*GetCertificateOK
 		Reader:             &GetCertificateReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -80,17 +89,56 @@ func (a *Client) GetCertificate(params *GetCertificateParams) (*GetCertificateOK
 }
 
 /*
-  IssueCertificate issues a new certificate
+GetPFX gets certificate pfx
 
-  Request the issuance of a new digital certificate.
+Retrieve pxf bundle for generated certificates
 */
-func (a *Client) IssueCertificate(params *IssueCertificateParams) (*IssueCertificateOK, error) {
+func (a *Client) GetPFX(params *GetPFXParams, writer io.Writer, opts ...ClientOption) (*GetPFXOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetPFXParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "getPFX",
+		Method:             "GET",
+		PathPattern:        "/certificates/{certificateId}/pfx",
+		ProducesMediaTypes: []string{"application/octet-stream"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetPFXReader{formats: a.formats, writer: writer},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetPFXOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for getPFX: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+IssueCertificate issues a new certificate
+
+Request the issuance of a new digital certificate.
+*/
+func (a *Client) IssueCertificate(params *IssueCertificateParams, opts ...ClientOption) (*IssueCertificateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewIssueCertificateParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "issueCertificate",
 		Method:             "POST",
 		PathPattern:        "/certificates",
@@ -101,7 +149,12 @@ func (a *Client) IssueCertificate(params *IssueCertificateParams) (*IssueCertifi
 		Reader:             &IssueCertificateReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -116,17 +169,16 @@ func (a *Client) IssueCertificate(params *IssueCertificateParams) (*IssueCertifi
 }
 
 /*
-  RequestCRL requests a latest c r l
+RequestCRL requests a latest c r l
 
-  Provide the latest CRL
+Provide the latest CRL
 */
-func (a *Client) RequestCRL(params *RequestCRLParams, writer io.Writer) (*RequestCRLOK, error) {
+func (a *Client) RequestCRL(params *RequestCRLParams, writer io.Writer, opts ...ClientOption) (*RequestCRLOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewRequestCRLParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "requestCRL",
 		Method:             "GET",
 		PathPattern:        "/crl.crl",
@@ -137,7 +189,12 @@ func (a *Client) RequestCRL(params *RequestCRLParams, writer io.Writer) (*Reques
 		Reader:             &RequestCRLReader{formats: a.formats, writer: writer},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -152,17 +209,16 @@ func (a *Client) RequestCRL(params *RequestCRLParams, writer io.Writer) (*Reques
 }
 
 /*
-  RequestCertificate requests a new certificate
+RequestCertificate requests a new certificate
 
-  Request the issuance of a new digital certificate.
+Request the issuance of a new digital certificate.
 */
-func (a *Client) RequestCertificate(params *RequestCertificateParams) (*RequestCertificateOK, error) {
+func (a *Client) RequestCertificate(params *RequestCertificateParams, opts ...ClientOption) (*RequestCertificateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewRequestCertificateParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "requestCertificate",
 		Method:             "POST",
 		PathPattern:        "/requests",
@@ -173,7 +229,12 @@ func (a *Client) RequestCertificate(params *RequestCertificateParams) (*RequestC
 		Reader:             &RequestCertificateReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -188,17 +249,16 @@ func (a *Client) RequestCertificate(params *RequestCertificateParams) (*RequestC
 }
 
 /*
-  RevokeCertificate revokes a certificate
+RevokeCertificate revokes a certificate
 
-  Revoke a specific certificate.
+Revoke a specific certificate.
 */
-func (a *Client) RevokeCertificate(params *RevokeCertificateParams) (*RevokeCertificateOK, error) {
+func (a *Client) RevokeCertificate(params *RevokeCertificateParams, opts ...ClientOption) (*RevokeCertificateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewRevokeCertificateParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "revokeCertificate",
 		Method:             "DELETE",
 		PathPattern:        "/certificates/{certificateId}",
@@ -209,7 +269,12 @@ func (a *Client) RevokeCertificate(params *RevokeCertificateParams) (*RevokeCert
 		Reader:             &RevokeCertificateReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -224,17 +289,16 @@ func (a *Client) RevokeCertificate(params *RevokeCertificateParams) (*RevokeCert
 }
 
 /*
-  SignRequest issues certificate on request
+SignRequest issues certificate on request
 
-  Request the issuance of a new digital certificate.
+Request the issuance of a new digital certificate.
 */
-func (a *Client) SignRequest(params *SignRequestParams) (*SignRequestOK, error) {
+func (a *Client) SignRequest(params *SignRequestParams, opts ...ClientOption) (*SignRequestOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewSignRequestParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "signRequest",
 		Method:             "GET",
 		PathPattern:        "/requests/{requestId}",
@@ -245,7 +309,12 @@ func (a *Client) SignRequest(params *SignRequestParams) (*SignRequestOK, error) 
 		Reader:             &SignRequestReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}

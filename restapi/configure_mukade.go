@@ -116,7 +116,7 @@ func configureAPI(api *operations.MukadeAPI) http.Handler {
 	api.RevokeCertificateHandler = operations.RevokeCertificateHandlerFunc(mukadeoperations.RevokeCertificateLogic(MukadeFlags))
 	api.RequestCRLHandler = operations.RequestCRLHandlerFunc(mukadeoperations.RequestCRLLogic(MukadeFlags))
 	api.GetCertificateHandler = operations.GetCertificateHandlerFunc(mukadeoperations.GetCertificateLogic(MukadeFlags))
-
+	api.GetPFXHandler = operations.GetPFXHandlerFunc(mukadeoperations.GetPFXLogic(MukadeFlags))
 	api.PreServerShutdown = func() {}
 
 	api.ServerShutdown = func() {}

@@ -38,9 +38,8 @@ func (o *RevokeCertificateReader) ReadResponse(response runtime.ClientResponse, 
 			return nil, err
 		}
 		return nil, result
-
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[DELETE /certificates/{certificateId}] revokeCertificate", response, response.Code())
 	}
 }
 
@@ -49,14 +48,49 @@ func NewRevokeCertificateOK() *RevokeCertificateOK {
 	return &RevokeCertificateOK{}
 }
 
-/*RevokeCertificateOK handles this case with default header values.
+/*
+RevokeCertificateOK describes a response with status code 200, with default header values.
 
 Certificate revoked successfully
 */
 type RevokeCertificateOK struct {
 }
 
+// IsSuccess returns true when this revoke certificate o k response has a 2xx status code
+func (o *RevokeCertificateOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this revoke certificate o k response has a 3xx status code
+func (o *RevokeCertificateOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this revoke certificate o k response has a 4xx status code
+func (o *RevokeCertificateOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this revoke certificate o k response has a 5xx status code
+func (o *RevokeCertificateOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this revoke certificate o k response a status code equal to that given
+func (o *RevokeCertificateOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the revoke certificate o k response
+func (o *RevokeCertificateOK) Code() int {
+	return 200
+}
+
 func (o *RevokeCertificateOK) Error() string {
+	return fmt.Sprintf("[DELETE /certificates/{certificateId}][%d] revokeCertificateOK ", 200)
+}
+
+func (o *RevokeCertificateOK) String() string {
 	return fmt.Sprintf("[DELETE /certificates/{certificateId}][%d] revokeCertificateOK ", 200)
 }
 
@@ -70,14 +104,49 @@ func NewRevokeCertificateNotFound() *RevokeCertificateNotFound {
 	return &RevokeCertificateNotFound{}
 }
 
-/*RevokeCertificateNotFound handles this case with default header values.
+/*
+RevokeCertificateNotFound describes a response with status code 404, with default header values.
 
 Certificate not found
 */
 type RevokeCertificateNotFound struct {
 }
 
+// IsSuccess returns true when this revoke certificate not found response has a 2xx status code
+func (o *RevokeCertificateNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this revoke certificate not found response has a 3xx status code
+func (o *RevokeCertificateNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this revoke certificate not found response has a 4xx status code
+func (o *RevokeCertificateNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this revoke certificate not found response has a 5xx status code
+func (o *RevokeCertificateNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this revoke certificate not found response a status code equal to that given
+func (o *RevokeCertificateNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
+// Code gets the status code for the revoke certificate not found response
+func (o *RevokeCertificateNotFound) Code() int {
+	return 404
+}
+
 func (o *RevokeCertificateNotFound) Error() string {
+	return fmt.Sprintf("[DELETE /certificates/{certificateId}][%d] revokeCertificateNotFound ", 404)
+}
+
+func (o *RevokeCertificateNotFound) String() string {
 	return fmt.Sprintf("[DELETE /certificates/{certificateId}][%d] revokeCertificateNotFound ", 404)
 }
 
@@ -91,14 +160,49 @@ func NewRevokeCertificateInternalServerError() *RevokeCertificateInternalServerE
 	return &RevokeCertificateInternalServerError{}
 }
 
-/*RevokeCertificateInternalServerError handles this case with default header values.
+/*
+RevokeCertificateInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */
 type RevokeCertificateInternalServerError struct {
 }
 
+// IsSuccess returns true when this revoke certificate internal server error response has a 2xx status code
+func (o *RevokeCertificateInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this revoke certificate internal server error response has a 3xx status code
+func (o *RevokeCertificateInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this revoke certificate internal server error response has a 4xx status code
+func (o *RevokeCertificateInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this revoke certificate internal server error response has a 5xx status code
+func (o *RevokeCertificateInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this revoke certificate internal server error response a status code equal to that given
+func (o *RevokeCertificateInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the revoke certificate internal server error response
+func (o *RevokeCertificateInternalServerError) Code() int {
+	return 500
+}
+
 func (o *RevokeCertificateInternalServerError) Error() string {
+	return fmt.Sprintf("[DELETE /certificates/{certificateId}][%d] revokeCertificateInternalServerError ", 500)
+}
+
+func (o *RevokeCertificateInternalServerError) String() string {
 	return fmt.Sprintf("[DELETE /certificates/{certificateId}][%d] revokeCertificateInternalServerError ", 500)
 }
 

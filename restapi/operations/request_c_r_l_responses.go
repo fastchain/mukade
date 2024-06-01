@@ -15,7 +15,8 @@ import (
 // RequestCRLOKCode is the HTTP code returned for type RequestCRLOK
 const RequestCRLOKCode int = 200
 
-/*RequestCRLOK Request processed
+/*
+RequestCRLOK Request processed
 
 swagger:response requestCRLOK
 */
@@ -57,7 +58,8 @@ func (o *RequestCRLOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 // RequestCRLBadRequestCode is the HTTP code returned for type RequestCRLBadRequest
 const RequestCRLBadRequestCode int = 400
 
-/*RequestCRLBadRequest Invalid request
+/*
+RequestCRLBadRequest Invalid request
 
 swagger:response requestCRLBadRequest
 */
@@ -81,7 +83,8 @@ func (o *RequestCRLBadRequest) WriteResponse(rw http.ResponseWriter, producer ru
 // RequestCRLInternalServerErrorCode is the HTTP code returned for type RequestCRLInternalServerError
 const RequestCRLInternalServerErrorCode int = 500
 
-/*RequestCRLInternalServerError Internal server error
+/*
+RequestCRLInternalServerError Internal server error
 
 swagger:response requestCRLInternalServerError
 */

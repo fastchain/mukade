@@ -13,19 +13,19 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewRevokeCertificateParams creates a new RevokeCertificateParams object
+// NewGetPFXParams creates a new GetPFXParams object
 //
 // There are no default values defined in the spec.
-func NewRevokeCertificateParams() RevokeCertificateParams {
+func NewGetPFXParams() GetPFXParams {
 
-	return RevokeCertificateParams{}
+	return GetPFXParams{}
 }
 
-// RevokeCertificateParams contains all the bound params for the revoke certificate operation
+// GetPFXParams contains all the bound params for the get p f x operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters revokeCertificate
-type RevokeCertificateParams struct {
+// swagger:parameters getPFX
+type GetPFXParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -40,8 +40,8 @@ type RevokeCertificateParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewRevokeCertificateParams() beforehand.
-func (o *RevokeCertificateParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetPFXParams() beforehand.
+func (o *GetPFXParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -57,7 +57,7 @@ func (o *RevokeCertificateParams) BindRequest(r *http.Request, route *middleware
 }
 
 // bindCertificateID binds and validates parameter CertificateID from path.
-func (o *RevokeCertificateParams) bindCertificateID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetPFXParams) bindCertificateID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

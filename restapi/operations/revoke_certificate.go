@@ -29,12 +29,12 @@ func NewRevokeCertificate(ctx *middleware.Context, handler RevokeCertificateHand
 	return &RevokeCertificate{Context: ctx, Handler: handler}
 }
 
-/*RevokeCertificate swagger:route DELETE /certificates/{certificateId} revokeCertificate
+/*
+	RevokeCertificate swagger:route DELETE /certificates/{certificateId} revokeCertificate
 
-Revoke a certificate
+# Revoke a certificate
 
 Revoke a specific certificate.
-
 */
 type RevokeCertificate struct {
 	Context *middleware.Context
@@ -44,7 +44,7 @@ type RevokeCertificate struct {
 func (o *RevokeCertificate) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		r = rCtx
+		*r = *rCtx
 	}
 	var Params = NewRevokeCertificateParams()
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params

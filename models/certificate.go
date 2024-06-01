@@ -42,8 +42,17 @@ type Certificate struct {
 	// PEM encoding
 	Pem string `json:"pem,omitempty"`
 
+	// PFX container with cert,bundle and key
+	Pfx string `json:"pfx,omitempty"`
+
+	// PFX container pwd
+	Pfxpwd string `json:"pfxpwd,omitempty"`
+
 	// Certificate Request
 	Req string `json:"req,omitempty"`
+
+	// Private key for generated certificates
+	Secretkey string `json:"secretkey,omitempty"`
 
 	// Certificate Serial
 	Serial string `json:"serial,omitempty"`
