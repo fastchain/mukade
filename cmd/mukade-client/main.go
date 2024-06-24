@@ -11,6 +11,7 @@ import (
 	"github.com/fastchain/mukade/models"
 	"github.com/go-openapi/strfmt"
 	"log"
+	"os"
 
 	"crypto/x509/pkix"
 	//"encoding/pem"
@@ -67,13 +68,18 @@ func main() {
 	var cr models.CertificateRequest
 	_ = string(csrPem)
 	_ = "aaa"
-	newcn := "eXample.com"
+	newcn := "at@dl.com"
 	subj := csrTemplate.Subject.String()
+	template := "leaf"
+	crttype := "client"
 
 	//cr.PublicKey = pk
 	cr.Subject = subj
 	//cr.Raw = raw
 	cr.Cn = &newcn
+	cr.Template = &template
+	cr.Type = &crttype
+	cr.San = "lolhost.com"
 
 	//"publicKey":"aaa","subject":"aa","raw"
 
@@ -167,4 +173,20 @@ func main() {
 		log.Fatalf("Error making request: %v", err)
 	}
 	fmt.Println(response4.Payload.Bundle)
+
+	pfxreq := clientoperations.GetPFXParams{CertificateID: response.Payload.ID}
+	var pfxMemoryBuffer bytes.Buffer
+
+	_, err = mClient.Operations.GetPFX(&pfxreq, &pfxMemoryBuffer)
+	if err != nil {
+		log.Fatalf("Error making request: %v", err)
+	}
+	fmt.Println(response4.Payload.Bundle)
+
+	if err := os.WriteFile("certificate.pfx", pfxMemoryBuffer.Bytes()[:], 0644); err != nil {
+		log.Fatalf("Failed to write certificate.pfx: %v", err)
+	}
+
+	fmt.Println("PFX file created successfully: certificate.pfx")
+
 }

@@ -6,39 +6,45 @@ import (
 
 	"bytes"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
-	"github.com/cloudflare/cfssl/api"
+	"github.com/fastchain/mukade/dbmodels"
 	serveroperations "github.com/fastchain/mukade/restapi/operations"
 	"github.com/go-openapi/runtime/middleware"
 	"io"
-	"net/http"
 )
 
 /*
 GetArchiveLogic is logic to process GET request to dowload archive
 */
 
-type BufferCloser struct {
+type PFXBufferCloser struct {
 	*bytes.Buffer
 }
 
-func (bc *BufferCloser) Close() error {
+func (bc *PFXBufferCloser) Close() error {
 	return nil
 }
 
-func RequestCRLLogic(Flags MukadeFlags) func(params serveroperations.RequestCRLParams) middleware.Responder {
+func GetPFXLogic(Flags MukadeFlags) func(params serveroperations.GetPFXParams) middleware.Responder {
 
-	return func(params serveroperations.RequestCRLParams) middleware.Responder {
+	return func(params serveroperations.GetPFXParams) middleware.Responder {
 
-		resp, err := http.Get("http://127.0.0.1:8888/api/v1/cfssl/crl")
-		if err != nil {
-			panic(err)
+		var crt dbmodels.Certificate
+		result := dbmodels.DB.First(&crt, "id = ?", params.CertificateID)
+		if result.RowsAffected == 0 {
+			//msg:="Line Not found "
+			//return serveroperations.NewLineCreateInternalServerError().WithPayload(&dbmodels.Error{Message:&msg})
+			panic("Line Not found ")
 		}
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			panic(err)
-		}
+
+		//resp, err := http.Get("http://127.0.0.1:8888/api/v1/cfssl/crl")
+		//if err != nil {
+		//	panic(err)
+		//}
+		//body, err := io.ReadAll(resp.Body)
+		//if err != nil {
+		//	panic(err)
+		//}
 
 		//fmt.Println(string(body))
 
@@ -58,18 +64,18 @@ func RequestCRLLogic(Flags MukadeFlags) func(params serveroperations.RequestCRLP
 		//	panic(err)
 		//}
 
-		message := new(api.Response)
-		err = json.Unmarshal(body, message)
-		if err != nil {
-			panic(err)
-		}
-
-		der, err := base64.StdEncoding.DecodeString(fmt.Sprint(message.Result))
-		if err != nil {
-			panic(err)
-		}
-
-		fmt.Println(der)
+		//message := new(api.Response)
+		//err = json.Unmarshal(body, message)
+		//if err != nil {
+		//	panic(err)
+		//}
+		//
+		//der, err := base64.StdEncoding.DecodeString(fmt.Sprint(message.Result))
+		//if err != nil {
+		//	panic(err)
+		//}
+		//
+		//fmt.Println(der)
 
 		//var jjj string
 		//jjj = fmt.Sprint(body)
@@ -92,12 +98,16 @@ func RequestCRLLogic(Flags MukadeFlags) func(params serveroperations.RequestCRLP
 		//}
 
 		//out := io.ReadWriteCloser(buf)
+		pfxbytes, err := base64.StdEncoding.DecodeString(crt.Pfx)
+		if err != nil {
+			panic(err)
+		}
 
-		buffer := bytes.NewBuffer(der)
+		buffer := bytes.NewBuffer(pfxbytes)
 		buf := &BufferCloser{Buffer: buffer}
 		fmt.Println(buf)
 
-		reader := bytes.NewReader(der)
+		reader := bytes.NewReader(pfxbytes)
 
 		// Step 2: Convert io.Reader to io.ReadCloser using ioutil.NopCloser
 		readCloser := io.NopCloser(reader)

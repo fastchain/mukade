@@ -5,9 +5,11 @@ import (
 	//"git.fintechru.org/masterchain/mstor2.git/fakecrypto"
 
 	"bytes"
+	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"encoding/pem"
@@ -37,7 +39,7 @@ func loadPEMCerts(bundle string) ([]*x509.Certificate, error) {
 	//	return nil, fmt.Errorf("failed to read cert file: %w", err)
 	//}
 
-	certPEM:= []byte(bundle)
+	certPEM := []byte(bundle)
 	var certs []*x509.Certificate
 	for {
 		block, rest := pem.Decode(certPEM)
@@ -57,6 +59,19 @@ func loadPEMCerts(bundle string) ([]*x509.Certificate, error) {
 	return certs, nil
 }
 
+func decodeECPrivateKey(pemStr string) (*ecdsa.PrivateKey, error) {
+	block, _ := pem.Decode([]byte(pemStr))
+	if block == nil || block.Type != "EC PRIVATE KEY" {
+		return nil, fmt.Errorf("failed to decode PEM block containing EC private key")
+	}
+
+	privKey, err := x509.ParseECPrivateKey(block.Bytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse EC private key: %w", err)
+	}
+
+	return privKey, nil
+}
 
 /*
 GetArchiveLogic is logic to process GET request to dowload archive
@@ -110,6 +125,9 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 			Number int    `json:"number"`
 			Title  string `json:"title"`
 		}
+		type jsonBundleRequest struct {
+			Certificate string `json:"certificate"`
+		}
 
 		type jsonSignRequest struct {
 			Hostname string          `json:"hostname"`
@@ -140,7 +158,7 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 
 		}
 
-		if len(csr.Raw)>0 {
+		if len(csr.Raw) > 0 {
 			sign, err = cfss.Sign(srout)
 			if sign == nil || err != nil {
 				panic(err)
@@ -148,28 +166,32 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 		} else {
 
 			type cfsslRequestName struct {
-				C string `json:"c"`
+				C  string `json:"c"`
 				ST string `json:"st"`
-				L string `json:"l"`
-				O string `json:"o"`
+				L  string `json:"l"`
+				O  string `json:"o"`
 			}
 			type cfsslRequest struct {
-				Hosts []string `json:"hosts"`
-				Names []cfsslRequestName `json:"names"`
+				Hosts   []string           `json:"hosts"`
+				Names   []cfsslRequestName `json:"names"`
+				Cn      string             `json:"CN"`
+				Profile string             `json:"profile"`
 			}
 			type jsonGenerateCertificateAndKey struct {
 				Request cfsslRequest `json:"request"`
-				Cn    string `json:"cn"`
 			}
 
 			jcr := jsonGenerateCertificateAndKey{
 				//Hosts:   hosts,
-				Cn: fmt.Sprint(csr.Cn),
+
 				Request: cfsslRequest{
-					Names: []cfsslRequestName{{C:"us",ST: "CN",L:"ND",O: "SS"}},
-					Hosts: []string{"www.example.com"},
+					Names: []cfsslRequestName{},
+					//Names: []cfsslRequestName{{C: "us", ST: "CN", L: "ND", O: "SS"}},
+					Hosts:   []string{csr.San},
+					Profile: *csr.Template,
+					Cn:      *csr.Cn,
 				},
-				//Profile: "leaf",
+
 				//Label:   cap.Label,
 				//Bun
 			}
@@ -188,7 +210,13 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 				panic(err)
 			}
 
-			fmt.Println(string(body))
+			//fmt.Println(string(body))
+
+			var gencert map[string]interface{}
+			err = json.Unmarshal(body, &gencert)
+			if err != nil {
+				log.Fatalf("Error unmarshalling JSON: %v", err)
+			}
 
 			//result := map[string]interface{}{
 			//	"private_key":         string(key),
@@ -200,9 +228,92 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 			//	},
 			//}
 
+			rslt := gencert["result"].(map[string]interface{})
+			secret_key := rslt["private_key"]
+			certificate_request := rslt["certificate_request"]
+			certificate := rslt["certificate"]
+
+			newCert, err := helpers.ParseCertificatePEM([]byte(fmt.Sprint(certificate)))
+			if err != nil {
+				panic(newCert)
+			}
+
+			jbr := jsonBundleRequest{
+				//Hosts:   hosts,
+				Certificate: fmt.Sprint(certificate),
+				//Profile: "leaf",
+				//Label:   cap.Label,
+				//Bun
+			}
+			jbrout, err := json.Marshal(jbr)
+			if err != nil {
+				panic(err)
+			}
+
+			resp, err = http.Post("http://127.0.0.1:8888/api/v1/cfssl/bundle", "application/json", bytes.NewReader(jbrout))
+			if err != nil {
+				panic(err)
+			}
+			body, err = io.ReadAll(resp.Body)
+			if err != nil {
+				panic(err)
+			}
+
+			// Variable to hold the unmarshaled data
+			var bundle map[string]interface{}
+
+			// Unmarshal the JSON data into the map
+			err = json.Unmarshal(body, &bundle)
+			if err != nil {
+				panic(err)
+			}
+
+			nicebundle := bundle["result"].(map[string]interface{})["bundle"].(string)
+			root := bundle["result"].(map[string]interface{})["root"].(string)
+			intermediates, err := loadPEMCerts(root + "\n" + nicebundle)
+			if err != nil {
+				log.Fatalf("Failed to load intermediate certs: %v", err)
+			}
+
+			privKey, err := decodeECPrivateKey(fmt.Sprint(secret_key))
+			if err != nil {
+				log.Fatalf("Failed to decode EC private key: %v", err)
+			}
+
+			pfxData, err := pkcs12.Legacy.Encode(privKey, newCert, intermediates, pkcs12.DefaultPassword)
+			if err != nil {
+				log.Fatalf("Failed to create PFX: %v", err)
+			}
+
+			//if err := os.WriteFile("certificate.pfx", pfxData, 0644); err != nil {
+			//	log.Fatalf("Failed to write certificate.pfx: %v", err)
+			//}
+			//
+			//fmt.Println("PFX file created successfully: certificate.pfx")
+
+			//fmt.Println(certificate)
+			newCertificate := dbmodels.Certificate{
+				Pem:       fmt.Sprint(certificate),
+				Subject:   newCert.Subject.String(),
+				Req:       fmt.Sprint(certificate_request),
+				Serial:    newCert.SerialNumber.String(),
+				ID:        params.RequestID,
+				Aki:       hex.EncodeToString(newCert.AuthorityKeyId),
+				Bundle:    bundle["result"].(map[string]interface{})["bundle"].(string),
+				Secretkey: fmt.Sprint(secret_key),
+				Pfx:       base64.StdEncoding.EncodeToString(pfxData),
+				Pfxpwd:    pkcs12.DefaultPassword,
+			}
+			result = dbmodels.DB.Create(&newCertificate)
+			if result.Error != nil {
+				//serveroperations.
+				panic(result.Error.Error())
+				//msg := result.Error.Error()
+				//return serveroperations.NewIssueCertificateInternalServerError()
+			}
+
+			return serveroperations.NewRequestCertificateOK()
 		}
-
-
 
 		//fmt.Println(string(sign))
 		newCert, err := helpers.ParseCertificatePEM(sign)
@@ -211,9 +322,6 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 		}
 
 		//bundle request
-		type jsonBundleRequest struct {
-			Certificate string `json:"certificate"`
-		}
 
 		jbr := jsonBundleRequest{
 			//Hosts:   hosts,
@@ -263,9 +371,8 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 		//h.Write(rsaPublickey.N.Bytes())
 		//id := hex.EncodeToString(h.Sum(nil))
 
-		nicebundle:= bundle["result"].(map[string]interface{})["bundle"].(string)
+		nicebundle := bundle["result"].(map[string]interface{})["bundle"].(string)
 		//password := "1234"
-
 
 		intermediates, err := loadPEMCerts(nicebundle)
 		if err != nil {
@@ -276,7 +383,7 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 		if err != nil {
 			log.Fatalf("Failed to generate private key: %v", err)
 		}
-		pfxData, err := pkcs12.Legacy.Encode( priv, intermediates[0], intermediates[1:1], pkcs12.DefaultPassword)
+		pfxData, err := pkcs12.Legacy.Encode(priv, intermediates[0], intermediates[1:1], pkcs12.DefaultPassword)
 		if err != nil {
 			log.Fatalf("Failed to create PFX: %v", err)
 		}
@@ -286,7 +393,6 @@ func SignRequestLogic(Flags MukadeFlags) func(params serveroperations.SignReques
 		}
 
 		fmt.Println("PFX file created successfully: certificate.pfx")
-
 
 		newCertificate := dbmodels.Certificate{
 

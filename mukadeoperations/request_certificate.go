@@ -23,8 +23,8 @@ func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.Req
 
 		//replaced := strings.ReplaceAll(params.CertificateRequest.Raw, "\\n", "")
 		//fmt.Println(replaced)
-		var newRequest  dbmodels.CertificateRequest
-		if len(params.CertificateRequest.Raw)!=0 {
+		var newRequest dbmodels.CertificateRequest
+		if len(params.CertificateRequest.Raw) != 0 {
 			newCSR, err := helpers.ParseCSRPEM([]byte(params.CertificateRequest.Raw))
 			if err != nil {
 				//return serveroperations.NewRequestCertificateOK().WithPayload(err)
@@ -56,6 +56,7 @@ func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.Req
 			pubKeyID := sha1.Sum(pubKeyBytes)
 			pubKeyIDStr := fmt.Sprintf("%x", pubKeyID)
 
+			crttype := "unknown"
 			newRequest = dbmodels.CertificateRequest{
 
 				PublicKey: pk,
@@ -63,10 +64,9 @@ func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.Req
 				Subject:   cb,
 				ID:        pubKeyIDStr,
 				Cn:        params.CertificateRequest.Cn,
+				Type:      &crttype,
 			}
 		} else {
-
-
 
 			// Compute the public key identifier (SHA-1 hash of the public key)
 			pubKeyID := sha1.Sum([]byte(fmt.Sprint(params.CertificateRequest.Cn)))
@@ -74,9 +74,11 @@ func RequestCertificateLogic(Flags MukadeFlags) func(params serveroperations.Req
 
 			newRequest = dbmodels.CertificateRequest{
 
-				Raw:       params.CertificateRequest.Raw,
-				ID:        pubKeyIDStr,
-				Cn:        params.CertificateRequest.Cn,
+				ID:       pubKeyIDStr,
+				Cn:       params.CertificateRequest.Cn,
+				Template: params.CertificateRequest.Template,
+				Type:     params.CertificateRequest.Type,
+				San:      params.CertificateRequest.San,
 			}
 		}
 

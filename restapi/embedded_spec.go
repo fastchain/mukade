@@ -309,7 +309,9 @@ func init() {
     "CertificateRequest": {
       "type": "object",
       "required": [
-        "cn"
+        "cn",
+        "type",
+        "template"
       ],
       "properties": {
         "cn": {
@@ -328,8 +330,20 @@ func init() {
           "description": "Raw request as string",
           "type": "string"
         },
+        "san": {
+          "description": "Subject Alternative Names (SAN) for server certificates",
+          "type": "string"
+        },
         "subject": {
           "description": "Name of the entity requesting the certificate.",
+          "type": "string"
+        },
+        "template": {
+          "description": "Which template to use for certificate",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the crt",
           "type": "string"
         }
       }
@@ -640,7 +654,9 @@ func init() {
     "CertificateRequest": {
       "type": "object",
       "required": [
-        "cn"
+        "cn",
+        "type",
+        "template"
       ],
       "properties": {
         "cn": {
@@ -659,8 +675,20 @@ func init() {
           "description": "Raw request as string",
           "type": "string"
         },
+        "san": {
+          "description": "Subject Alternative Names (SAN) for server certificates",
+          "type": "string"
+        },
         "subject": {
           "description": "Name of the entity requesting the certificate.",
+          "type": "string"
+        },
+        "template": {
+          "description": "Which template to use for certificate",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the crt",
           "type": "string"
         }
       }

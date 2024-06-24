@@ -94,6 +94,47 @@ paths:
           description: 'Internal server error'
 
 
+  /certificates/{certificateId}/pfx:
+    get:
+      summary: 'Get certificate pfx'
+      description: 'Retrieve pxf bundle for generated certificates'
+      operationId: 'getPFX'
+      parameters:
+        - name: 'certificateId'
+          in: 'path'
+          required: true
+          type: 'string'
+      produces:
+        - 'application/octet-stream'
+      responses:
+        200:
+          description: 'Request processed'
+          schema:
+            type: 'file'
+        404:
+          description: 'Certificate not found'
+        500:
+          description: 'Internal server error'
+
+#  /certificates/{certificateId}/bundle:
+#    get:
+#      summary: 'Get certificate status'
+#      description: 'Retrieve the status and details of a specific certificate.'
+#      operationId: 'getCertificate'
+#      parameters:
+#        - name: 'certificateId'
+#          in: 'path'
+#          required: true
+#          type: 'string'
+#      responses:
+#        200:
+#          description: 'Successful retrieval of certificate data'
+#          schema:
+#            $ref: '#/definitions/Certificate'
+#        404:
+#          description: 'Certificate not found'
+#        500:
+#          description: 'Internal server error'
 
   /certificates/{certificateId}:
     get:
@@ -133,6 +174,14 @@ paths:
           description: 'Internal server error'
 
 definitions:
+  PFX:
+    type: 'object'
+    required:
+      - 'raw'
+    properties:
+      raw:
+        type: 'string'
+        description: 'PFX'
   CRL:
     type: 'object'
     required:
@@ -146,6 +195,8 @@ definitions:
     type: 'object'
     required:
       - 'cn'
+      - 'type'
+      - 'template'
     properties:
       subject:
         type: 'string'
@@ -162,7 +213,15 @@ definitions:
       cn:
         type: 'string'
         description: 'CN for autoissuer'
-
+      type:
+        type: 'string'
+        description: 'Type of the crt'
+      san:
+        type: 'string'
+        description: 'Subject Alternative Names (SAN) for server certificates'
+      template:
+        type: 'string'
+        description: 'Which template to use for certificate'
 
   Certificate:
     type: 'object'
@@ -202,5 +261,14 @@ definitions:
       bundle:
         type: string
         description: 'Certificate bundle'
+      secretkey:
+        type: string
+        description: 'Private key for generated certificates'
+      pfx:
+        type: string
+        description: 'PFX container with cert,bundle and key'
+      pfxpwd:
+        type: string
+        description: 'PFX container pwd'
 
 

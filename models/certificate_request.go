@@ -32,8 +32,19 @@ type CertificateRequest struct {
 	// Raw request as string
 	Raw string `json:"raw,omitempty"`
 
+	// Subject Alternative Names (SAN) for server certificates
+	San string `json:"san,omitempty"`
+
 	// Name of the entity requesting the certificate.
 	Subject string `json:"subject,omitempty"`
+
+	// Which template to use for certificate
+	// Required: true
+	Template *string `json:"template"`
+
+	// Type of the crt
+	// Required: true
+	Type *string `json:"type"`
 }
 
 // Validate validates this certificate request
@@ -41,6 +52,14 @@ func (m *CertificateRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCn(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTemplate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateType(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -53,6 +72,24 @@ func (m *CertificateRequest) Validate(formats strfmt.Registry) error {
 func (m *CertificateRequest) validateCn(formats strfmt.Registry) error {
 
 	if err := validate.Required("cn", "body", m.Cn); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CertificateRequest) validateTemplate(formats strfmt.Registry) error {
+
+	if err := validate.Required("template", "body", m.Template); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *CertificateRequest) validateType(formats strfmt.Registry) error {
+
+	if err := validate.Required("type", "body", m.Type); err != nil {
 		return err
 	}
 
